@@ -63,7 +63,8 @@ Using the `select()` and `join()` functions you were introduced to in in Module 
 build a tidy table with the desired columns. 
 
 ```{r}
- 
+# separate blocks within each category added first, e.g. timeseriesunits <- select(data, TCunits=TC....)
+
 ```
 
 ## Task 2: Mapping the Area table to marine regions
