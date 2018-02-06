@@ -1,5 +1,9 @@
 ---
+title: "Overfishing Exercise"
+author: "Chelsea Andreozzi and Dana Miller"
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r include = FALSE}
