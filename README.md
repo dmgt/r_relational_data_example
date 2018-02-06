@@ -1,5 +1,4 @@
-
-*add travis-ci badge here*
+[![Build Status](https://travis-ci.com/ds421/fish-chelsea-and-dana-m.svg?token=g97vRphehw31dP9UZyqp&branch=master)](https://travis-ci.com/ds421/fish-chelsea-and-dana-m)
 
 ## Team Members:
 
