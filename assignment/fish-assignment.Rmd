@@ -31,8 +31,8 @@ library("readxl")
 ## Reading in the tables
 
 ```{r}
-#download.file("https://depts.washington.edu/ramlegac/wordpress/databaseVersions/RLSADB_v3.0_(assessment_data_only)_excel.zip", 
-#              "ramlegacy.zip")
+# download.file("https://depts.washington.edu/ramlegac/wordpress/databaseVersions/RLSADB_v3.0_(assessment_data_only)_excel.zip", 
+        #      "ramlegacy.zip")
 path <- unzip("ramlegacy.zip")  #unzip the .xls files
 sheets <- readxl::excel_sheets(path) #use the readxl package to identify sheet names 
 ram <- lapply(sheets, readxl::read_excel, path = path)  #read the data from all 3 sheets into a list
