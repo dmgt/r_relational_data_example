@@ -35,6 +35,8 @@ library("readxl")
         #      "ramlegacy.zip")
 path <- unzip("ramlegacy.zip")  #unzip the .xls files
 sheets <- readxl::excel_sheets(path) #use the readxl package to identify sheet names 
+
+#purrr:map is the tidyverse version of lapply
 ram <- lapply(sheets, readxl::read_excel, path = path)  #read the data from all 3 sheets into a list
 names(ram) <- sheets # give the list of datatables their assigned sheet names
 
