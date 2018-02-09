@@ -93,6 +93,9 @@ in their name -- ex. "Georges Bank".
 Hint: you want want to consider functions `filter()` or `grep()`
 
 ```{r}
+GeorgesBank <- ram$area %>%
+  filter(areaname == "Georges Bank")
+GeorgesBank
 
 ```
 
@@ -102,6 +105,23 @@ Atlantic Cod populations into a new tidytable.
 Hint: you may want to use functions like `filter()` or `distinct()`
 
 ```{r}
+cod <- ourdata %>%
+  filter(commonname == "Atlantic cod")
+cod
+
+# we don't have area id because we took that out of ourdata table. 
+# we're building another table!
+
+ourdata_withareaid <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
+  by = c("assessid", "stockid")) %>%
+  rename(SSB = SSB.x, SSBunits = SSB.y, Total_Catch = TC.x, Total_Catch_units = TC.y) %>%
+  left_join(ram$stock, by = "stockid") %>%
+  left_join(ram$area, by = "areaid") %>%
+  select("year", "country", "areaid", "scientificname", "commonname", "SSB", "SSBunits", "Total_Catch", "Total_Catch_units")
+
+cod2 <- ourdata_withareaid %>%
+  filter(commonname == "Atlantic cod")
+cod2
 
 ```
 
@@ -113,6 +133,7 @@ certain subsets of ids from your table of cod areas. ex. the first 8 ids, or the
 Create a vector of ids of areas with Atlantic Cod and in Canada. 
 
 ```{r}
+
 
 ```
 
