@@ -133,7 +133,20 @@ certain subsets of ids from your table of cod areas. ex. the first 8 ids, or the
 Create a vector of ids of areas with Atlantic Cod and in Canada. 
 
 ```{r}
+cod2 %>%
+  select(country, areaid) %>%
+  distinct() %>%
+  left_join(ram$area, by = "areaid")
 
+# This told us that first 8 ids referred to DFO which is Canada and NAFO
+# which is multinational but next to Canada...so also Canada fisheries.
+
+CanadianCodareas <- cod2 %>%
+   select(country, areaid) %>%
+  distinct() %>%
+  left_join(ram$area, by = "areaid") %>%
+  filter(areatype == "DFO" | areatype == "NAFO") %>%
+  pull(areaid)
 
 ```
 
