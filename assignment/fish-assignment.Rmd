@@ -31,8 +31,8 @@ library("readxl")
 ## Reading in the tables
 
 ```{r}
-# download.file("https://depts.washington.edu/ramlegac/wordpress/databaseVersions/RLSADB_v3.0_(assessment_data_only)_excel.zip", 
-        #      "ramlegacy.zip")
+download.file("https://depts.washington.edu/ramlegac/wordpress/databaseVersions/RLSADB_v3.0_(assessment_data_only)_excel.zip", 
+              "ramlegacy.zip")
 path <- unzip("ramlegacy.zip")  #unzip the .xls files
 sheets <- readxl::excel_sheets(path) #use the readxl package to identify sheet names 
 
@@ -67,6 +67,18 @@ build a tidy table with the desired columns.
 ```{r}
 # separate blocks within each category added first, e.g. timeseriesunits <- select(data, TCunits=TC....)
 
+lapply(ram, names) # use instead of viewer
+lapply(ram, head)
+
+ourdata <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
+  by = c("assessid", "stockid")) %>%
+  rename(SSB = SSB.x, SSBunits = SSB.y, Total_Catch = TC.x, Total_Catch_units = TC.y) %>%
+  left_join(ram$stock, by = "stockid") %>%
+  left_join(ram$area, by = "areaid") %>%
+  select("year", "country", "scientificname", "commonname", "SSB", "SSBunits", "Total_Catch", "Total_Catch_units")
+
+head(ourdata)
+       
 ```
 
 ## Task 2: Mapping the Area table to marine regions
