@@ -31,9 +31,9 @@ library("readxl")
 ## Reading in the tables
 
 ```{r}
-# download.file("https://depts.washington.edu/ramlegac/wordpress/databaseVersions/RLSADB_v3.0_(assessment_data_only)_excel.zip", 
-        #      "ramlegacy.zip")
-# path <- unzip("ramlegacy.zip")  #unzip the .xls files
+download.file("https://depts.washington.edu/ramlegac/wordpress/databaseVersions/RLSADB_v3.0_(assessment_data_only)_excel.zip", 
+              "ramlegacy.zip")
+path <- unzip("ramlegacy.zip")  #unzip the .xls files 
 sheets <- readxl::excel_sheets(path) #use the readxl package to identify sheet names 
 
 #purrr:map is the tidyverse version of lapply
@@ -65,7 +65,20 @@ Using the `select()` and `join()` functions you were introduced to in in Module 
 build a tidy table with the desired columns. 
 
 ```{r}
- 
+# separate blocks within each category added first, e.g. timeseriesunits <- select(data, TCunits=TC....)
+
+lapply(ram, names) # use instead of viewer
+lapply(ram, head)
+
+ourdata <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
+  by = c("assessid", "stockid")) %>%
+  rename(SSB = SSB.x, SSBunits = SSB.y, Total_Catch = TC.x, Total_Catch_units = TC.y) %>%
+  left_join(ram$stock, by = "stockid") %>%
+  left_join(ram$area, by = "areaid") %>%
+  select("year", "country", "scientificname", "commonname", "SSB", "SSBunits", "Total_Catch", "Total_Catch_units")
+
+head(ourdata)
+       
 ```
 
 ## Task 2: Mapping the Area table to marine regions
@@ -80,6 +93,9 @@ in their name -- ex. "Georges Bank".
 Hint: you want want to consider functions `filter()` or `grep()`
 
 ```{r}
+GeorgesBank <- ram$area %>%
+  filter(areaname == "Georges Bank")
+GeorgesBank
 
 ```
 
@@ -89,6 +105,23 @@ Atlantic Cod populations into a new tidytable.
 Hint: you may want to use functions like `filter()` or `distinct()`
 
 ```{r}
+cod <- ourdata %>%
+  filter(commonname == "Atlantic cod")
+cod
+
+# we don't have area id because we took that out of ourdata table. 
+# we're building another table!
+
+ourdata_withareaid <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
+  by = c("assessid", "stockid")) %>%
+  rename(SSB = SSB.x, SSBunits = SSB.y, Total_Catch = TC.x, Total_Catch_units = TC.y) %>%
+  left_join(ram$stock, by = "stockid") %>%
+  left_join(ram$area, by = "areaid") %>%
+  select("year", "country", "areaid", "scientificname", "commonname", "SSB", "SSBunits", "Total_Catch", "Total_Catch_units")
+
+cod2 <- ourdata_withareaid %>%
+  filter(commonname == "Atlantic cod")
+cod2
 
 ```
 
@@ -100,6 +133,20 @@ certain subsets of ids from your table of cod areas. ex. the first 8 ids, or the
 Create a vector of ids of areas with Atlantic Cod and in Canada. 
 
 ```{r}
+cod2 %>%
+  select(country, areaid) %>%
+  distinct() %>%
+  left_join(ram$area, by = "areaid")
+
+# This told us that first 8 ids referred to DFO which is Canada and NAFO
+# which is multinational but next to Canada...so also Canada fisheries.
+
+CanadianCodareas <- cod2 %>%
+   select(country, areaid) %>%
+  distinct() %>%
+  left_join(ram$area, by = "areaid") %>%
+  filter(areatype == "DFO" | areatype == "NAFO") %>%
+  pull(areaid)
 
 ```
 
