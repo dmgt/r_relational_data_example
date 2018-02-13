@@ -33,7 +33,7 @@ library("readxl")
 ```{r}
 # download.file("https://depts.washington.edu/ramlegac/wordpress/databaseVersions/RLSADB_v3.0_(assessment_data_only)_excel.zip", 
         #      "ramlegacy.zip")
-path <- unzip("ramlegacy.zip")  #unzip the .xls files
+# path <- unzip("ramlegacy.zip")  #unzip the .xls files
 sheets <- readxl::excel_sheets(path) #use the readxl package to identify sheet names 
 
 #purrr:map is the tidyverse version of lapply
