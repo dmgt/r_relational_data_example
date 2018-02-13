@@ -119,9 +119,9 @@ ourdata_withareaid <- left_join(ram$timeseries_values_views, ram$timeseries_unit
   left_join(ram$area, by = "areaid") %>%
   select("year", "country", "areaid", "scientificname", "commonname", "SSB", "SSBunits", "Total_Catch", "Total_Catch_units")
 
-cod2 <- ourdata_withareaid %>%
+cod_only <- ourdata_withareaid %>%
   filter(commonname == "Atlantic cod")
-cod2
+cod_only
 
 ```
 
@@ -133,7 +133,8 @@ certain subsets of ids from your table of cod areas. ex. the first 8 ids, or the
 Create a vector of ids of areas with Atlantic Cod and in Canada. 
 
 ```{r}
-cod2 %>%
+#Experiment
+cod_only %>%
   select(country, areaid) %>%
   distinct() %>%
   left_join(ram$area, by = "areaid")
@@ -141,7 +142,7 @@ cod2 %>%
 # This told us that first 8 ids referred to DFO which is Canada and NAFO
 # which is multinational but next to Canada...so also Canada fisheries.
 
-CanadianCodareas <- cod2 %>%
+CanadianCodareas <- cod_only %>%
    select(country, areaid) %>%
   distinct() %>%
   left_join(ram$area, by = "areaid") %>%
@@ -157,9 +158,31 @@ Calculate and plot the catch in million tons (MT) of Atlantic Cod from
 Canada using the data table and vector of ids you created above. 
 Hint: you may want to use functions like `group_by()`, `filter()`, and/or `summarise()`
 
-```{r }
 
+```{r}
+#First attempt
+CanadianCodCatch <- cod_only %>%
+  left_join(ram$area, by = "areaid") %>%
+  filter(areatype == "DFO" | areatype == "NAFO") %>%
+  group_by(year) %>%
+  summarize(CN_catch=sum(Total_Catch))
 
+#Second attempt
+CanadianCodCatch <- cod_only %>%
+  semi_join(CanadianCodareas) %>%
+  group_by(year) %>%
+  summarize(CN_catch=sum(Total_Catch))  # add varible for na's?
+
+#Third - suggestions from GSI - still have na's issue
+CanadianCodCatch <- cod_only %>%
+  filter(areaid %in% CanadianCodareas) %>%
+  group_by(year) %>%
+  summarize(CN_catch=sum(Total_Catch))  
+
+p1 <- ggplot(CanadianCodCatch, aes(y = CN_catch, x = year)) +
+      geom_line() +
+      theme_bw()
+  
 ```
 
 **Question:** How does this graph compare to the one presented above? 
