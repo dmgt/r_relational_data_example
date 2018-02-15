@@ -160,29 +160,25 @@ Hint: you may want to use functions like `group_by()`, `filter()`, and/or `summa
 
 
 ```{r}
-#First attempt
 CanadianCodCatch <- cod_only %>%
   left_join(ram$area, by = "areaid") %>%
   filter(areatype == "DFO" | areatype == "NAFO") %>%
   group_by(year) %>%
-  summarize(CN_catch=sum(Total_Catch))
+  summarize(CN_catch=sum(Total_Catch, na.rm = TRUE))
 
-#Second attempt
-CanadianCodCatch <- cod_only %>%
-  semi_join(CanadianCodareas) %>%
-  group_by(year) %>%
-  summarize(CN_catch=sum(Total_Catch))  # add varible for na's?
+## note: this is an alternative way that we could have written this 
+# and it gives same result
 
-#Third - suggestions from GSI - still have na's issue
-CanadianCodCatch <- cod_only %>%
-  filter(areaid %in% CanadianCodareas) %>%
-  group_by(year) %>%
-  summarize(CN_catch=sum(Total_Catch))  
+# CanadianCodCatch <- cod_only %>%
+  # filter(areaid %in% CanadianCodareas) %>%
+  # group_by(year) %>%
+  # summarize(CN_catch=sum(Total_Catch, na.rm = TRUE))  
 
-p1 <- ggplot(CanadianCodCatch, aes(y = CN_catch, x = year)) +
+
+plot1 <- ggplot(CanadianCodCatch, aes(y = CN_catch, x = year)) +
       geom_line() +
       theme_bw()
-  
+plot1  
 ```
 
 **Question:** How does this graph compare to the one presented above? 
