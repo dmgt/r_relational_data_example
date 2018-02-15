@@ -204,6 +204,9 @@ We seek to replicate the temporal trend in stock declines shown in [Worm et al 2
 
 **Question 1:** What years does this plot include? What is it plotting? 
 
+1950 - 2004?
+Percent of taxa classified as collapsed
+
 ## Task 1: Plotting total taxa caught worldwide 1950-2006
 
 Adapting the table you created in the first exercise, select and 
