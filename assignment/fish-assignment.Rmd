@@ -26,6 +26,7 @@ loading it.
 ```{r message = FALSE}
 library("tidyverse")
 library("readxl")
+library("scales") # For y-axis labels not in scientific notation - is there a better way to do this since 2012?
 ```
 
 ## Reading in the tables
@@ -149,6 +150,7 @@ CanadianCodareas <- cod_only %>%
   filter(areatype == "DFO" | areatype == "NAFO") %>%
   pull(areaid)
 
+CanadianCodareas
 ```
 
 
@@ -177,11 +179,18 @@ CanadianCodCatch <- cod_only %>%
 
 plot1 <- ggplot(CanadianCodCatch, aes(y = CN_catch, x = year)) +
       geom_line() +
-      theme_bw()
+      ylab("Cod catch in Canada and adjacent multinational waters (tons)")+
+      xlab("Year")+
+      scale_y_continuous(#limits = c(0, 1000000),
+                         breaks = c( 0, 100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000, 1100000), labels = comma) +
+      theme_bw() +
+      theme(text=element_text(size=16))
 plot1  
 ```
 
 **Question:** How does this graph compare to the one presented above? 
+
+Very similar trend to original plot, with slightly higher overrall number of fish, probably because we included the multinational fisheries bordering Canadian waters
 
 ------
 
