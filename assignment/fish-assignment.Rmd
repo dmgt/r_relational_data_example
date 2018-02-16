@@ -181,8 +181,7 @@ plot1 <- ggplot(CanadianCodCatch, aes(y = CN_catch, x = year)) +
       geom_line() +
       ylab("Cod catch in Canada and adjacent multinational waters (tons)")+
       xlab("Year")+
-      scale_y_continuous(#limits = c(0, 1000000),
-                         breaks = c( 0, 100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000, 1100000), labels = comma) +
+      scale_y_continuous(breaks = c( 0, 100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000, 1100000), labels = comma) +
       theme_bw() +
       theme(text=element_text(size=16))
 plot1  
@@ -204,8 +203,8 @@ We seek to replicate the temporal trend in stock declines shown in [Worm et al 2
 
 **Question 1:** What years does this plot include? What is it plotting? 
 
-1950 - 2004?
-Percent of taxa classified as collapsed
+1950 - 2003
+Percent of taxa classified as collapsed with diamonds representing collapses by year, triangles representing cumulative collapse, blue representing species poor large marine ecosystem areas, red representing species rich areas, and black represnting combined total (poor and rich areas). 
 
 ## Task 1: Plotting total taxa caught worldwide 1950-2006
 
@@ -217,7 +216,11 @@ Hint: you may want to use functions like `group_by()`, `tally()` and be sure to
 carefully consider how to handle or omit missing values. 
 
 ```{r}
-
+# we need rows by year and a tally of each species caught for each year
+tallied_species <- ourdata %>%
+  group_by(year) %>%
+  summarise(count = n_distinct(scientificname))
+View(tallied_species)
 ```
 
 ## Task 2: Removing incomplete datasets
@@ -229,6 +232,23 @@ full range (1950-2006).
 
 
 ```{r}
+
+# we need to get stockid back into our dataset
+# we could probably just fix this in an earlier step but we're going to 
+# build a new table with it first
+ourdata_withstockid <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
+  by = c("assessid", "stockid")) %>%
+  rename(SSB = SSB.x, SSBunits = SSB.y, Total_Catch = TC.x, Total_Catch_units = TC.y) %>%
+  left_join(ram$stock, by = "stockid") %>%
+  left_join(ram$area, by = "areaid") %>%
+  select("year", "country", "areaid", "stockid", "scientificname", "commonname", "SSB", "SSBunits", "Total_Catch", "Total_Catch_units")
+
+stockid_fullyearrange <- ourdata_withstockid %>% 
+  filter(year >= 1950 & year <= 2006) %>% # directed year range
+  group_by(stockid) %>% 
+  summarise(count = n()) %>%  # gives count of number of years each stock id is recorded 
+  filter(count == 57) %>% # 57 is our full range of years 1950-2006
+  select("stockid") # built character vector
 
 ```
 
