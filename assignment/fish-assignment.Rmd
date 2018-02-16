@@ -18,7 +18,7 @@ fisheries stock assessment data and fisheries collapse.
 
 We will use data from the [RAM Legacy Stock Assessment Database](http://ramlegacy.marinebiodiversity.ca/ram-legacy-stock-assessment-database)
 
-First, load in the necessary librarys. Note that this time we need a package we 
+First, load in the necessary libraries. Note that this time we need a package we 
 haven't used before `readxl`. This package is useful for reading in .xls or 
 .xlsx files. As always if you want more info on a package run `?readxl` after 
 loading it.
@@ -179,7 +179,7 @@ CanadianCodCatch <- cod_only %>%
 
 plot1 <- ggplot(CanadianCodCatch, aes(y = CN_catch, x = year)) +
       geom_line() +
-      ylab("Cod catch in Canada and adjacent multinational waters (tons)")+
+      ylab("Cod catch in CA and adjacent waters (tons)")+
       xlab("Year")+
       scale_y_continuous(breaks = c( 0, 100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000, 1100000), labels = comma) +
       theme_bw() +
@@ -218,9 +218,22 @@ carefully consider how to handle or omit missing values.
 ```{r}
 # we need rows by year and a tally of each species caught for each year
 tallied_species <- ourdata %>%
+  filter(year >= 1950 & year <= 2006) %>%
   group_by(year) %>%
   summarise(count = n_distinct(scientificname))
-View(tallied_species)
+head(tallied_species) # head data looks correct
+tail(tallied_species) # tail data looks correct
+
+## Now we can plot total taxa caught worldwide 1950-2006
+
+total_taxa_plot <- ggplot(tallied_species, aes(x = year, y = count)) +
+  geom_point() +
+  ylab("Total taxa caught worldwide")+
+      xlab("Year")+
+      theme_bw() +
+      theme(text=element_text(size=16))
+total_taxa_plot
+  
 ```
 
 ## Task 2: Removing incomplete datasets
@@ -250,18 +263,18 @@ stockid_fullyearrange <- ourdata_withstockid %>%
   filter(count == 57) %>% # 57 is our full range of years 1950-2006
   select("stockid") # built character vector
 
-View(stockid_fullyearrange)
+head(stockid_fullyearrange) # character vector looks correct
 
 ```
 
 **Question 2:** How many taxa have data for the full range? 
 
-63! See code below.
+63 taxa! See code below.
 
 ```{r}
 count(stockid_fullyearrange)
-# There are 90 stock ids with data for the full range. 
-# But now we need to match this with species name for taxa count.
+## There are 90 stock ids with data for the full range. 
+## But now we need to match this with species name for taxa count.
 
 # we need to join this character vector table thing with species name
 
@@ -269,14 +282,14 @@ count(stockid_fullyearrange)
 # taxa_fullyearrange <- stockid_fullyearrange %>%
   # left_join(ourdata_withstockid, by = "stockid")
 
-# this gives us full catch data again but filtered for our 90 stock ids
+## this gives us full catch data again but filtered for our 90 stock ids
 semi_join(ourdata_withstockid, stockid_fullyearrange) %>%
   filter(year >= 1950 & year <= 2006) %>% # directed year range
   group_by(scientificname) %>%
   distinct(scientificname) %>%
   nrow()
 
-# could have used filter with %in% vector version of ==
+# Note: could have used filter with %in% vector version of ==
 ```
 
 
