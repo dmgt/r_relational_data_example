@@ -250,12 +250,33 @@ stockid_fullyearrange <- ourdata_withstockid %>%
   filter(count == 57) %>% # 57 is our full range of years 1950-2006
   select("stockid") # built character vector
 
+View(stockid_fullyearrange)
+
 ```
 
-**Question 2:** How many taxa have data for the full range?
+**Question 2:** How many taxa have data for the full range? 
+
+63! See code below.
 
 ```{r}
+count(stockid_fullyearrange)
+# There are 90 stock ids with data for the full range. 
+# But now we need to match this with species name for taxa count.
 
+# we need to join this character vector table thing with species name
+
+# this didn't work:
+# taxa_fullyearrange <- stockid_fullyearrange %>%
+  # left_join(ourdata_withstockid, by = "stockid")
+
+# this gives us full catch data again but filtered for our 90 stock ids
+semi_join(ourdata_withstockid, stockid_fullyearrange) %>%
+  filter(year >= 1950 & year <= 2006) %>% # directed year range
+  group_by(scientificname) %>%
+  distinct(scientificname) %>%
+  nrow()
+
+# could have used filter with %in% vector version of ==
 ```
 
 
