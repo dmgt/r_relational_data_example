@@ -290,6 +290,12 @@ be considered collapsed in that year, and `cumulative` is the count of total yea
 the fishery has been collapsed at that point in time. 
 
 ```{r}
+#For each species, find peak TC between 1950 and 2006
+ testing <- ourdata_withstockid %>%
+          group_by(stockid) %>%
+          mutate(PeakTC = max(Total_Catch)) # do more mutate for % and if collapsed
+           
+  
 
 ```
 
