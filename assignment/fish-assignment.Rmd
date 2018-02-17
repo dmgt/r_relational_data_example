@@ -282,9 +282,12 @@ count(stockid_fullyearrange)
 # taxa_fullyearrange <- stockid_fullyearrange %>%
   # left_join(ourdata_withstockid, by = "stockid")
 
-## this gives us full catch data again but filtered for our 90 stock ids
-semi_join(ourdata_withstockid, stockid_fullyearrange) %>%
-  filter(year >= 1950 & year <= 2006) %>% # directed year range
+## Below code gives us full catch data again but filtered for our 90 stock ids
+complete_catch_data <- semi_join(ourdata_withstockid, stockid_fullyearrange) %>%
+  filter(year >= 1950 & year <= 2006)  # directed year range
+
+## This gives us a count of taxa from the new table we just created
+complete_catch_data %>% 
   group_by(scientificname) %>%
   distinct(scientificname) %>%
   nrow()
@@ -304,13 +307,26 @@ the fishery has been collapsed at that point in time.
 
 ```{r}
 #For each species, find peak TC between 1950 and 2006
- testing <- ourdata_withstockid %>%
+ test_for_collapsed <- complete_catch_data %>%
           group_by(stockid) %>%
-          mutate(PeakTC = max(Total_Catch)) # do more mutate for % and if collapsed
-           
+          mutate(PeakTC = max(Total_Catch)) %>% # do more mutate for % and if collapsed
+          mutate(PercentOfPeak = (Total_Catch/PeakTC)) %>%
+          mutate(Collapsed = (PercentOfPeak < 0.1)) %>% 
+  #added logical operator TRUE = 1 means collapsed
+  #this should allow us to do a sum of column for cumulative collapsed years
+          mutate(Cumulative = cumsum(Collapsed)) %>%
+          select(stockid, year, Total_Catch, PeakTC, PercentOfPeak, Collapsed, Cumulative)
   
+head(test_for_collapsed)
+tail(test_for_collapsed)
 
 ```
+
+***Note: what the above table building revealed is that we haven't filtered all missing values out yet. Some of the taxa which we assumed had complete data based on having an entry for every year between 1950-2006 are actually missing stock or total catch data.
+
+Another concern is that some fisheries are recorded as collapsed in earlier years because the total catch was initially less than 10% of the peak total catch. This doesn't really make sense because it is more of a statement of the fishing economy than the health of that fish stock at the time. This needs to be examined further and the count of cumulative collapsed years will not really be accurate until this has been resolved.
+
+
 
 ## Task 4: Plotting total catch
 
