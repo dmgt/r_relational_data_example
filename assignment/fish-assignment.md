@@ -437,28 +437,7 @@ GeorgesBank
 We are interested in mapping the data from just the areas where Atlantic Cod are found. Using the table you built above, pull out distinct areas that contain Atlantic Cod populations into a new tidytable. Hint: you may want to use functions like `filter()` or `distinct()`
 
 ``` r
-cod <- ourdata %>%
-  filter(commonname == "Atlantic cod")
-cod
-```
-
-    ## # A tibble: 1,069 x 8
-    ##     year country scientificname commonname     SSB SSBunits Total_Catch
-    ##    <dbl> <chr>   <chr>          <chr>        <dbl> <chr>          <dbl>
-    ##  1  1850 Canada  Gadus morhua   Atlantic cod    NA MT            133100
-    ##  2  1851 Canada  Gadus morhua   Atlantic cod    NA MT            125400
-    ##  3  1852 Canada  Gadus morhua   Atlantic cod    NA MT            120000
-    ##  4  1853 Canada  Gadus morhua   Atlantic cod    NA MT            116600
-    ##  5  1854 Canada  Gadus morhua   Atlantic cod    NA MT            103900
-    ##  6  1855 Canada  Gadus morhua   Atlantic cod    NA MT            131500
-    ##  7  1856 Canada  Gadus morhua   Atlantic cod    NA MT            150800
-    ##  8  1857 Canada  Gadus morhua   Atlantic cod    NA MT            169300
-    ##  9  1858 Canada  Gadus morhua   Atlantic cod    NA MT            133800
-    ## 10  1859 Canada  Gadus morhua   Atlantic cod    NA MT            153900
-    ## # ... with 1,059 more rows, and 1 more variable: Total_Catch_units <chr>
-
-``` r
-# we don't have area id because we took that out of ourdata table. 
+# we don't have area id because we took that out of ourdata table above. 
 # we're building another table!
 
 ourdata_withareaid <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
@@ -528,8 +507,8 @@ cod_only %>%
     ## 19 multinati~ multi~ multinat~ ICES     VIa      West of~ Clyde herring
 
 ``` r
-# This told us that first 8 ids referred to DFO which is Canada and NAFO
-# which is multinational but next to Canada...so also Canada fisheries.
+# This told us that first 8 ids referred to DFO which is Canada, and NAFO
+# which is multinational but next to Canada, so we'll include both of these
 
 CanadianCodareas <- cod_only %>%
    select(country, areaid) %>%
@@ -558,8 +537,8 @@ CanadianCodCatch <- cod_only %>%
   group_by(year) %>%
   summarize(CN_catch=sum(Total_Catch, na.rm = TRUE))
 
-## note: this is an alternative way that we could have written this 
-# and it gives same result
+## note: below is an alternative way that we could have written this 
+# and it gives same result so we are including it for reference
 
 # CanadianCodCatch <- cod_only %>%
   # filter(areaid %in% CanadianCodareas) %>%
@@ -607,7 +586,7 @@ Adapting the table you created in the first exercise, select and manipulate the 
 Hint: you may want to use functions like `group_by()`, `tally()` and be sure to carefully consider how to handle or omit missing values.
 
 ``` r
-# we need rows by year and a tally of each species caught for each year
+## we need rows by year and a tally of each species caught for each year
 tallied_species <- ourdata %>%
   filter(year >= 1950 & year <= 2006) %>%
   group_by(year) %>%
@@ -706,12 +685,6 @@ count(stockid_fullyearrange)
 ## There are 90 stock ids with data for the full range. 
 ## But now we need to match this with species name for taxa count.
 
-# we need to join this character vector table thing with species name
-
-# this didn't work:
-# taxa_fullyearrange <- stockid_fullyearrange %>%
-  # left_join(ourdata_withstockid, by = "stockid")
-
 ## Below code gives us full catch data again but filtered for our 90 stock ids
 complete_catch_data <- semi_join(ourdata_withstockid, stockid_fullyearrange) %>%
   filter(year >= 1950 & year <= 2006)  # directed year range
@@ -736,7 +709,7 @@ A fishery may be considered *collapsed* when total catch (TC) falls below 10% of
 
 ``` r
 #For each species, find peak TC between 1950 and 2006
- test_for_collapsed <- complete_catch_data %>%
+ test_0 <- complete_catch_data %>%
           group_by(stockid) %>%
           mutate(PeakTC = max(Total_Catch)) %>% # do more mutate for % and if collapsed
           mutate(PercentOfPeak = (Total_Catch/PeakTC)) %>%
@@ -746,7 +719,7 @@ A fishery may be considered *collapsed* when total catch (TC) falls below 10% of
           mutate(Cumulative = cumsum(Collapsed)) %>%
           select(stockid, year, Total_Catch, PeakTC, PercentOfPeak, Collapsed, Cumulative)
   
-head(test_for_collapsed)
+head(test_0)
 ```
 
     ## # A tibble: 6 x 7
@@ -761,7 +734,7 @@ head(test_for_collapsed)
     ## 6 ACADREDGOMGB  1955       13914  34307         0.406 F                  0
 
 ``` r
-tail(test_for_collapsed)
+tail(test_0)
 ```
 
     ## # A tibble: 6 x 7
@@ -779,10 +752,194 @@ tail(test_for_collapsed)
 
 Another concern is that some fisheries are recorded as collapsed in earlier years because the total catch was initially less than 10% of the peak total catch. This doesn't really make sense because it is more of a statement of the fishing economy than the health of that fish stock at the time. This needs to be examined further and the count of cumulative collapsed years will not really be accurate until this has been resolved.
 
+Ideas about two ways to filter missing data: <https://stackoverflow.com/questions/26665319/removing-na-in-dplyr-pipe?rq=1>
+
+-   na.omit
+-   complete.cases
+
+``` r
+#Experiment filtering complete_catch_data with complete.cases
+
+test1 <- complete_catch_data %>%
+          filter(complete.cases(.)) %>% # removes rows with NA values
+          group_by(stockid) %>%
+          mutate(PeakTC = max(Total_Catch)) %>% 
+          mutate(PercentOfPeak = (Total_Catch/PeakTC)) %>%
+          mutate(Collapsed = (PercentOfPeak < 0.1)) %>% 
+          mutate(Cumulative = cumsum(Collapsed)) %>%
+          select(stockid, year, Total_Catch, PeakTC, PercentOfPeak, Collapsed, Cumulative)
+summary(test1)  
+```
+
+    ##    stockid               year       Total_Catch           PeakTC      
+    ##  Length:2616        Min.   :1950   Min.   :     0.0   Min.   :   135  
+    ##  Class :character   1st Qu.:1966   1st Qu.:   302.9   1st Qu.:  1768  
+    ##  Mode  :character   Median :1980   Median :  2046.9   Median :  7802  
+    ##                     Mean   :1980   Mean   : 20947.4   Mean   : 60568  
+    ##                     3rd Qu.:1994   3rd Qu.: 15529.0   3rd Qu.: 43855  
+    ##                     Max.   :2006   Max.   :811698.0   Max.   :811698  
+    ##  PercentOfPeak    Collapsed         Cumulative    
+    ##  Min.   :0.0000   Mode :logical   Min.   : 0.000  
+    ##  1st Qu.:0.1191   FALSE:2019      1st Qu.: 0.000  
+    ##  Median :0.3228   TRUE :597       Median : 4.000  
+    ##  Mean   :0.3598                   Mean   : 7.201  
+    ##  3rd Qu.:0.5375                   3rd Qu.:11.000  
+    ##  Max.   :1.0000                   Max.   :41.000
+
+``` r
+head(test1)
+```
+
+    ## # A tibble: 6 x 7
+    ## # Groups:   stockid [1]
+    ##   stockid       year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
+    ##   <chr>        <dbl>       <dbl>  <dbl>         <dbl> <lgl>          <int>
+    ## 1 ACADREDGOMGB  1950       34307  34307         1.00  F                  0
+    ## 2 ACADREDGOMGB  1951       30077  34307         0.877 F                  0
+    ## 3 ACADREDGOMGB  1952       21377  34307         0.623 F                  0
+    ## 4 ACADREDGOMGB  1953       16791  34307         0.489 F                  0
+    ## 5 ACADREDGOMGB  1954       12988  34307         0.379 F                  0
+    ## 6 ACADREDGOMGB  1955       13914  34307         0.406 F                  0
+
+``` r
+tail(test1)
+```
+
+    ## # A tibble: 6 x 7
+    ## # Groups:   stockid [1]
+    ##   stockid    year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
+    ##   <chr>     <dbl>       <dbl>  <dbl>         <dbl> <lgl>          <int>
+    ## 1 YSOLEBSAI  2001       63395 227107         0.279 F                  0
+    ## 2 YSOLEBSAI  2002       73000 227107         0.321 F                  0
+    ## 3 YSOLEBSAI  2003       74418 227107         0.328 F                  0
+    ## 4 YSOLEBSAI  2004       69046 227107         0.304 F                  0
+    ## 5 YSOLEBSAI  2005       94383 227107         0.416 F                  0
+    ## 6 YSOLEBSAI  2006       99068 227107         0.436 F                  0
+
+``` r
+test1 %>% 
+  group_by(stockid) %>%
+  distinct(stockid)
+```
+
+    ## # A tibble: 51 x 1
+    ## # Groups:   stockid [51]
+    ##    stockid         
+    ##    <chr>           
+    ##  1 ACADREDGOMGB    
+    ##  2 ALBAIO          
+    ##  3 ALBANATL        
+    ##  4 ARFLOUNDPCOAST  
+    ##  5 ATBTUNAEATL     
+    ##  6 ATBTUNAWATL     
+    ##  7 BGROCKPCOAST    
+    ##  8 BIGEYEIO        
+    ##  9 BKCDLFENI       
+    ## 10 BLACKROCKNPCOAST
+    ## # ... with 41 more rows
+
+``` r
+#Experiment filtering with na.omit
+
+
+test2 <- complete_catch_data %>%
+          na.omit() %>%     # removes rows with NA values
+          group_by(stockid) %>%
+          mutate(PeakTC = max(Total_Catch)) %>% 
+          mutate(PercentOfPeak = (Total_Catch/PeakTC)) %>%
+          mutate(Collapsed = (PercentOfPeak < 0.1)) %>% 
+          mutate(Cumulative = cumsum(Collapsed)) %>%
+          select(stockid, year, Total_Catch, PeakTC, PercentOfPeak, Collapsed, Cumulative)
+  
+summary(test2)
+```
+
+    ##    stockid               year       Total_Catch           PeakTC      
+    ##  Length:2616        Min.   :1950   Min.   :     0.0   Min.   :   135  
+    ##  Class :character   1st Qu.:1966   1st Qu.:   302.9   1st Qu.:  1768  
+    ##  Mode  :character   Median :1980   Median :  2046.9   Median :  7802  
+    ##                     Mean   :1980   Mean   : 20947.4   Mean   : 60568  
+    ##                     3rd Qu.:1994   3rd Qu.: 15529.0   3rd Qu.: 43855  
+    ##                     Max.   :2006   Max.   :811698.0   Max.   :811698  
+    ##  PercentOfPeak    Collapsed         Cumulative    
+    ##  Min.   :0.0000   Mode :logical   Min.   : 0.000  
+    ##  1st Qu.:0.1191   FALSE:2019      1st Qu.: 0.000  
+    ##  Median :0.3228   TRUE :597       Median : 4.000  
+    ##  Mean   :0.3598                   Mean   : 7.201  
+    ##  3rd Qu.:0.5375                   3rd Qu.:11.000  
+    ##  Max.   :1.0000                   Max.   :41.000
+
+``` r
+head(test2)
+```
+
+    ## # A tibble: 6 x 7
+    ## # Groups:   stockid [1]
+    ##   stockid       year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
+    ##   <chr>        <dbl>       <dbl>  <dbl>         <dbl> <lgl>          <int>
+    ## 1 ACADREDGOMGB  1950       34307  34307         1.00  F                  0
+    ## 2 ACADREDGOMGB  1951       30077  34307         0.877 F                  0
+    ## 3 ACADREDGOMGB  1952       21377  34307         0.623 F                  0
+    ## 4 ACADREDGOMGB  1953       16791  34307         0.489 F                  0
+    ## 5 ACADREDGOMGB  1954       12988  34307         0.379 F                  0
+    ## 6 ACADREDGOMGB  1955       13914  34307         0.406 F                  0
+
+``` r
+tail(test2)
+```
+
+    ## # A tibble: 6 x 7
+    ## # Groups:   stockid [1]
+    ##   stockid    year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
+    ##   <chr>     <dbl>       <dbl>  <dbl>         <dbl> <lgl>          <int>
+    ## 1 YSOLEBSAI  2001       63395 227107         0.279 F                  0
+    ## 2 YSOLEBSAI  2002       73000 227107         0.321 F                  0
+    ## 3 YSOLEBSAI  2003       74418 227107         0.328 F                  0
+    ## 4 YSOLEBSAI  2004       69046 227107         0.304 F                  0
+    ## 5 YSOLEBSAI  2005       94383 227107         0.416 F                  0
+    ## 6 YSOLEBSAI  2006       99068 227107         0.436 F                  0
+
+``` r
+test2 %>% 
+  group_by(stockid) %>%
+  distinct(stockid)
+```
+
+    ## # A tibble: 51 x 1
+    ## # Groups:   stockid [51]
+    ##    stockid         
+    ##    <chr>           
+    ##  1 ACADREDGOMGB    
+    ##  2 ALBAIO          
+    ##  3 ALBANATL        
+    ##  4 ARFLOUNDPCOAST  
+    ##  5 ATBTUNAEATL     
+    ##  6 ATBTUNAWATL     
+    ##  7 BGROCKPCOAST    
+    ##  8 BIGEYEIO        
+    ##  9 BKCDLFENI       
+    ## 10 BLACKROCKNPCOAST
+    ## # ... with 41 more rows
+
+After checking head, tail and stock ids for the two methods, either option for omitting NA's appears to give identical results. We should go forward with one method but we'll keep all of the code above as a reminder for the future.
+
+``` r
+test_for_collapsed <- complete_catch_data %>%
+          na.omit() %>%    
+          group_by(stockid) %>%
+          mutate(PeakTC = max(Total_Catch)) %>% 
+          mutate(PercentOfPeak = (Total_Catch/PeakTC)) %>%
+          mutate(Collapsed = (PercentOfPeak < 0.1)) %>% 
+          mutate(Cumulative = cumsum(Collapsed)) %>%
+          select(stockid, year, Total_Catch, PeakTC, PercentOfPeak, Collapsed, Cumulative)
+```
+
+Additional idea aboutthe TC collapse - there's probably a way we can set up the conditional so only the values of TC that are below 10% and come *after* the peak TC value (eg based on comparing the year of TC &gt; peak of PeakTC) are counted as collapsed
+
 Task 4: Plotting total catch
 ----------------------------
 
-Using `geom_area()` plot the TC per stockid acros all years.
+Using `geom_area()` plot the TC per stockid across all years.
 
 Task 5: Calculating percent collapsed
 -------------------------------------
