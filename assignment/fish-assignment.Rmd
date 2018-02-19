@@ -326,6 +326,48 @@ tail(test_for_collapsed)
 
 Another concern is that some fisheries are recorded as collapsed in earlier years because the total catch was initially less than 10% of the peak total catch. This doesn't really make sense because it is more of a statement of the fishing economy than the health of that fish stock at the time. This needs to be examined further and the count of cumulative collapsed years will not really be accurate until this has been resolved.
 
+Ideas about two ways to filter missing data: 
+https://stackoverflow.com/questions/26665319/removing-na-in-dplyr-pipe?rq=1
+
+- na.omit
+- complete.cases
+
+```{r}
+#Experiment filtering complete_catch_data with complete.cases
+
+test1 <- complete_catch_data %>%
+          filter(complete.cases(.)) %>% # line I changed
+          group_by(stockid) %>%
+          mutate(PeakTC = max(Total_Catch)) %>% 
+          mutate(PercentOfPeak = (Total_Catch/PeakTC)) %>%
+          mutate(Collapsed = (PercentOfPeak < 0.1)) %>% 
+          mutate(Cumulative = cumsum(Collapsed)) %>%
+          select(stockid, year, Total_Catch, PeakTC, PercentOfPeak, Collapsed, Cumulative)
+summary(test1)  
+head(test1)
+tail(test1)
+
+#Experiment filtering with na.omit
+
+
+test2 <- complete_catch_data %>%
+          na.omit() %>%     # line I changed
+          group_by(stockid) %>%
+          mutate(PeakTC = max(Total_Catch)) %>% 
+          mutate(PercentOfPeak = (Total_Catch/PeakTC)) %>%
+          mutate(Collapsed = (PercentOfPeak < 0.1)) %>% 
+          mutate(Cumulative = cumsum(Collapsed)) %>%
+          select(stockid, year, Total_Catch, PeakTC, PercentOfPeak, Collapsed, Cumulative)
+  
+summary(test2)
+head(test2)
+tail(test2)
+
+#They appear to both produce dataframes of 2616 x 7, no sure if there are other differences yet
+
+```
+
+Additional idea aboutthe TC collapse - there's probably a way we can set up the conditional so only the values of TC that are below 10% and come *after* the peak TC value (eg based on comparing the year of TC > peak of PeakTC) are counted as collapsed
 
 
 ## Task 4: Plotting total catch
