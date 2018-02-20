@@ -106,11 +106,7 @@ Atlantic Cod populations into a new tidytable.
 Hint: you may want to use functions like `filter()` or `distinct()`
 
 ```{r}
-cod <- ourdata %>%
-  filter(commonname == "Atlantic cod")
-cod
-
-# we don't have area id because we took that out of ourdata table. 
+# we don't have area id because we took that out of ourdata table above. 
 # we're building another table!
 
 ourdata_withareaid <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
@@ -140,8 +136,8 @@ cod_only %>%
   distinct() %>%
   left_join(ram$area, by = "areaid")
 
-# This told us that first 8 ids referred to DFO which is Canada and NAFO
-# which is multinational but next to Canada...so also Canada fisheries.
+# This told us that first 8 ids referred to DFO which is Canada, and NAFO
+# which is multinational but next to Canada, so we'll include both of these
 
 CanadianCodareas <- cod_only %>%
    select(country, areaid) %>%
@@ -168,8 +164,8 @@ CanadianCodCatch <- cod_only %>%
   group_by(year) %>%
   summarize(CN_catch=sum(Total_Catch, na.rm = TRUE))
 
-## note: this is an alternative way that we could have written this 
-# and it gives same result
+## note: below is an alternative way that we could have written this 
+# and it gives same result so we are including it for reference
 
 # CanadianCodCatch <- cod_only %>%
   # filter(areaid %in% CanadianCodareas) %>%
@@ -216,7 +212,7 @@ Hint: you may want to use functions like `group_by()`, `tally()` and be sure to
 carefully consider how to handle or omit missing values. 
 
 ```{r}
-# we need rows by year and a tally of each species caught for each year
+## we need rows by year and a tally of each species caught for each year
 tallied_species <- ourdata %>%
   filter(year >= 1950 & year <= 2006) %>%
   group_by(year) %>%
@@ -276,12 +272,6 @@ count(stockid_fullyearrange)
 ## There are 90 stock ids with data for the full range. 
 ## But now we need to match this with species name for taxa count.
 
-# we need to join this character vector table thing with species name
-
-# this didn't work:
-# taxa_fullyearrange <- stockid_fullyearrange %>%
-  # left_join(ourdata_withstockid, by = "stockid")
-
 ## Below code gives us full catch data again but filtered for our 90 stock ids
 complete_catch_data <- semi_join(ourdata_withstockid, stockid_fullyearrange) %>%
   filter(year >= 1950 & year <= 2006)  # directed year range
@@ -307,7 +297,7 @@ the fishery has been collapsed at that point in time.
 
 ```{r}
 #For each species, find peak TC between 1950 and 2006
- test_for_collapsed <- complete_catch_data %>%
+ test_0 <- complete_catch_data %>%
           group_by(stockid) %>%
           mutate(PeakTC = max(Total_Catch)) %>% # do more mutate for % and if collapsed
           mutate(PercentOfPeak = (Total_Catch/PeakTC)) %>%
@@ -317,8 +307,8 @@ the fishery has been collapsed at that point in time.
           mutate(Cumulative = cumsum(Collapsed)) %>%
           select(stockid, year, Total_Catch, PeakTC, PercentOfPeak, Collapsed, Cumulative)
   
-head(test_for_collapsed)
-tail(test_for_collapsed)
+head(test_0)
+tail(test_0)
 
 ```
 
@@ -336,7 +326,7 @@ https://stackoverflow.com/questions/26665319/removing-na-in-dplyr-pipe?rq=1
 #Experiment filtering complete_catch_data with complete.cases
 
 test1 <- complete_catch_data %>%
-          filter(complete.cases(.)) %>% # line I changed
+          filter(complete.cases(.)) %>% # removes rows with NA values
           group_by(stockid) %>%
           mutate(PeakTC = max(Total_Catch)) %>% 
           mutate(PercentOfPeak = (Total_Catch/PeakTC)) %>%
@@ -347,11 +337,15 @@ summary(test1)
 head(test1)
 tail(test1)
 
+test1 %>% 
+  group_by(stockid) %>%
+  distinct(stockid)
+
 #Experiment filtering with na.omit
 
 
 test2 <- complete_catch_data %>%
-          na.omit() %>%     # line I changed
+          na.omit() %>%     # removes rows with NA values
           group_by(stockid) %>%
           mutate(PeakTC = max(Total_Catch)) %>% 
           mutate(PercentOfPeak = (Total_Catch/PeakTC)) %>%
@@ -363,17 +357,36 @@ summary(test2)
 head(test2)
 tail(test2)
 
-#They appear to both produce dataframes of 2616 x 7, no sure if there are other differences yet
+test2 %>% 
+  group_by(stockid) %>%
+  distinct(stockid)
 
 ```
+
+
+After checking head, tail and stock ids for the two methods, either option for omitting NA's appears to give identical results. We should go forward with one method but we'll keep all of the code above as a reminder for the future.
+
+```{r}
+test_for_collapsed <- complete_catch_data %>%
+          na.omit() %>%    
+          group_by(stockid) %>%
+          mutate(PeakTC = max(Total_Catch)) %>% 
+          mutate(PercentOfPeak = (Total_Catch/PeakTC)) %>%
+          mutate(Collapsed = (PercentOfPeak < 0.1)) %>% 
+          mutate(Cumulative = cumsum(Collapsed)) %>%
+          select(stockid, year, Total_Catch, PeakTC, PercentOfPeak, Collapsed, Cumulative)
+```
+
+
 
 Additional idea aboutthe TC collapse - there's probably a way we can set up the conditional so only the values of TC that are below 10% and come *after* the peak TC value (eg based on comparing the year of TC > peak of PeakTC) are counted as collapsed
 
 
 ## Task 4: Plotting total catch
 
-Using `geom_area()` plot the TC per stockid acros all years. 
+Using `geom_area()` plot the TC per stockid across all years. 
 ```{r}
+
 
 ```
 
