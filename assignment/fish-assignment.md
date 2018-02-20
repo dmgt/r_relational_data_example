@@ -16,27 +16,7 @@ First, load in the necessary libraries. Note that this time we need a package we
 
 ``` r
 library("tidyverse")
-```
-
-    ## Warning: package 'tidyverse' was built under R version 3.4.3
-
-    ## Warning: package 'tidyr' was built under R version 3.4.2
-
-    ## Warning: package 'readr' was built under R version 3.4.2
-
-    ## Warning: package 'purrr' was built under R version 3.4.2
-
-    ## Warning: package 'dplyr' was built under R version 3.4.2
-
-    ## Warning: package 'forcats' was built under R version 3.4.3
-
-``` r
 library("readxl")
-```
-
-    ## Warning: package 'readxl' was built under R version 3.4.3
-
-``` r
 library("scales") # For y-axis labels not in scientific notation - is there a better way to do this since 2012?
 ```
 
@@ -46,14 +26,14 @@ Reading in the tables
 ``` r
 download.file("https://depts.washington.edu/ramlegac/wordpress/databaseVersions/RLSADB_v3.0_(assessment_data_only)_excel.zip", 
               "ramlegacy.zip")
-path <- unzip("ramlegacy.zip")  #unzip the .xls files 
-sheets <- readxl::excel_sheets(path) #use the readxl package to identify sheet names 
+path <- unzip("ramlegacy.zip")  # unzip the .xls files 
+sheets <- readxl::excel_sheets(path) # use the readxl package to identify sheet names 
 
-#purrr:map is the tidyverse version of lapply
-ram <- lapply(sheets, readxl::read_excel, path = path)  #read the data from all 3 sheets into a list
+# purrr:map is the tidyverse version of lapply
+ram <- lapply(sheets, readxl::read_excel, path = path)  # read the data from all 3 sheets into a list
 names(ram) <- sheets # give the list of datatables their assigned sheet names
 
-## check your names
+## check the names
 names(ram)
 ```
 
@@ -68,7 +48,7 @@ names(ram)
     ## [17] "tsmetrics"
 
 ``` r
-## check your data
+## check our data
 head(ram$area)
 ```
 
@@ -86,7 +66,7 @@ head(ram$area)
 Exercise 1: Investigating the North-Atlantic Cod
 ================================================
 
-First, We seek to replicate the following figure from the Millenium Ecosystem Assessment Project using the RAM data.
+First, we seek to replicate the following figure from the Millenium Ecosystem Assessment Project using the RAM data.
 
 ![](http://berkeley.carlboettiger.info/espm-88b/fish/img/codcollapse.jpg)
 
@@ -98,9 +78,10 @@ To replicate this plot, we need a table with the following columns: `"country"`,
 Using the `select()` and `join()` functions you were introduced to in in Module 1, build a tidy table with the desired columns.
 
 ``` r
-# separate blocks within each category added first, e.g. timeseriesunits <- select(data, TCunits=TC....)
+# Suggestion: separate blocks within each category added first, e.g. timeseriesunits <- select(data, TCunits=TC....)
 
-lapply(ram, names) # use instead of viewer
+# Code to look at categories of all the data tables
+lapply(ram, names) # can use instead of viewer
 ```
 
     ## $area
@@ -191,246 +172,12 @@ lapply(ram, names) # use instead of viewer
     ## [5] "tsunitslong"  "tsunique"
 
 ``` r
+Code to look at head() of all the data tables
 lapply(ram, head)
 ```
 
-    ## $area
-    ## # A tibble: 6 x 6
-    ##     country areatype areacode                            areaname
-    ##       <chr>    <chr>    <chr>                               <chr>
-    ## 1 Argentina      CFP    ARG-N                  Northern Argentina
-    ## 2 Argentina      CFP    ARG-S                  Southern Argentina
-    ## 3 Australia     AFMA  CASCADE                     Cascade Plateau
-    ## 4 Australia     AFMA      ESE Eastern half of Southeast Australia
-    ## 5 Australia     AFMA      GAB              Great Australian Bight
-    ## 6 Australia     AFMA       MI                    Macquarie Island
-    ## # ... with 2 more variables: alternateareaname <chr>, areaid <chr>
-    ## 
-    ## $assessment
-    ## # A tibble: 6 x 18
-    ##                              assessid assessorid      stockid
-    ##                                 <chr>      <chr>        <chr>
-    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER      NEFSC ACADREDGOMGB
-    ## 2        IFOP-AFLONCH-1998-2011-CHING       IFOP      AFLONCH
-    ## 3         IOTC-ALBAIO-1950-2010-CHING       IOTC       ALBAIO
-    ## 4       ICCAT-ALBAMED-1956-2011-CHING      ICCAT      ALBAMED
-    ## 5      ICCAT-ALBANATL-1950-2010-CHING      ICCAT     ALBANATL
-    ## 6        ISC-ALBANPAC-1952-2010-CHING        ISC     ALBANPAC
-    ## # ... with 15 more variables: stocklong <chr>, recorder <chr>,
-    ## #   daterecorded <dttm>, dateloaded <dttm>, assessyear <chr>,
-    ## #   assesssource <chr>, contacts <chr>, notes <chr>, pdffile <chr>,
-    ## #   assess <dbl>, refpoints <dbl>, assessmethod <chr>,
-    ## #   assesscomments <chr>, xlsfilename <chr>, mostrecent <dbl>
-    ## 
-    ## $assessmethod
-    ## # A tibble: 6 x 3
-    ##                 category methodshort
-    ##                    <chr>       <chr>
-    ## 1 Biomass dynamics model        AAPM
-    ## 2 Biomass dynamics model       ASPIC
-    ## 3 Biomass dynamics model        ASPM
-    ## 4 Biomass dynamics model         BBM
-    ## 5 Biomass dynamics model        BSPM
-    ## 6 Biomass dynamics model         CSM
-    ## # ... with 1 more variables: methodlong <chr>
-    ## 
-    ## $assessor
-    ## # A tibble: 6 x 4
-    ##   assessorid  mgmt       country
-    ##        <chr> <chr>         <chr>
-    ## 1     ABARES  AFMA     Australia
-    ## 2       ADFG  NMFS           USA
-    ## 3   ADRIAMED  GFCM Multinational
-    ## 4       AFSC  NMFS           USA
-    ## 5       AFWG  ICES Multinational
-    ## 6      ASMFC  NMFS           USA
-    ## # ... with 1 more variables: assessorfull <chr>
-    ## 
-    ## $biometrics
-    ## # A tibble: 6 x 7
-    ##           category  subcategory bioshort
-    ##              <chr>        <chr>    <chr>
-    ## 1 OTHER BIOMETRICS LIFE HISTORY    A50-1
-    ## 2 OTHER BIOMETRICS LIFE HISTORY    A50-2
-    ## 3 OTHER BIOMETRICS LIFE HISTORY   A50max
-    ## 4 OTHER BIOMETRICS LIFE HISTORY   A50max
-    ## 5 OTHER BIOMETRICS LIFE HISTORY   A50min
-    ## 6 OTHER BIOMETRICS LIFE HISTORY   A50min
-    ## # ... with 4 more variables: biolong <chr>, biounitsshort <chr>,
-    ## #   biounitslong <chr>, biounique <chr>
-    ## 
-    ## $bioparams
-    ## # A tibble: 6 x 7
-    ##                              assessid      stockid
-    ##                                 <chr>        <chr>
-    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 2 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 3 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 4 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 5 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 6 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## # ... with 5 more variables: stocklong <chr>, bioid <chr>, biovalue <chr>,
-    ## #   bioyear <chr>, bionotes <chr>
-    ## 
-    ## $bioparams_ids_views
-    ## # A tibble: 6 x 20
-    ##                              assessid      stockid
-    ##                                 <chr>        <chr>
-    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 2         IOTC-ALBAIO-1950-2010-CHING       ALBAIO
-    ## 3       ICCAT-ALBAMED-1956-2011-CHING      ALBAMED
-    ## 4      ICCAT-ALBANATL-1950-2010-CHING     ALBANATL
-    ## 5        ISC-ALBANPAC-1952-2010-CHING     ALBANPAC
-    ## 6      ICCAT-ALBASATL-1956-2010-CHING     ALBASATL
-    ## # ... with 18 more variables: stocklong <chr>, Bmsy <chr>, SSBmsy <chr>,
-    ## #   Nmsy <chr>, MSY <chr>, Fmsy <chr>, Umsy <chr>, B0 <chr>, SSB0 <chr>,
-    ## #   M <chr>, Bmsytouse <chr>, Umsytouse <chr>, Bmgt <lgl>, SSBmgt <chr>,
-    ## #   Fmgt <chr>, Umgt <chr>, Bmgttouse <chr>, Umgttouse <chr>
-    ## 
-    ## $bioparams_units_views
-    ## # A tibble: 6 x 16
-    ##                              assessid      stockid
-    ##                                 <chr>        <chr>
-    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 2         IOTC-ALBAIO-1950-2010-CHING       ALBAIO
-    ## 3       ICCAT-ALBAMED-1956-2011-CHING      ALBAMED
-    ## 4      ICCAT-ALBANATL-1950-2010-CHING     ALBANATL
-    ## 5        ISC-ALBANPAC-1952-2010-CHING     ALBANPAC
-    ## 6      ICCAT-ALBASATL-1956-2010-CHING     ALBASATL
-    ## # ... with 14 more variables: stocklong <chr>, Bmsy <chr>, SSBmsy <chr>,
-    ## #   Nmsy <chr>, MSY <chr>, Fmsy <chr>, Umsy <chr>, B0 <chr>, SSB0 <chr>,
-    ## #   M <chr>, Bmgt <lgl>, SSBmgt <chr>, Fmgt <chr>, Umgt <chr>
-    ## 
-    ## $bioparams_values_views
-    ## # A tibble: 6 x 20
-    ##                              assessid      stockid
-    ##                                 <chr>        <chr>
-    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 2         IOTC-ALBAIO-1950-2010-CHING       ALBAIO
-    ## 3       ICCAT-ALBAMED-1956-2011-CHING      ALBAMED
-    ## 4      ICCAT-ALBANATL-1950-2010-CHING     ALBANATL
-    ## 5        ISC-ALBANPAC-1952-2010-CHING     ALBANPAC
-    ## 6      ICCAT-ALBASATL-1956-2010-CHING     ALBASATL
-    ## # ... with 18 more variables: stocklong <chr>, Bmsy <dbl>, SSBmsy <dbl>,
-    ## #   Nmsy <dbl>, MSY <dbl>, Fmsy <dbl>, Umsy <dbl>, B0 <dbl>, SSB0 <dbl>,
-    ## #   M <dbl>, Bmsytouse <dbl>, Umsytouse <dbl>, Bmgt <lgl>, SSBmgt <dbl>,
-    ## #   Fmgt <dbl>, Umgt <dbl>, Bmgttouse <dbl>, Umgttouse <dbl>
-    ## 
-    ## $management
-    ## # A tibble: 6 x 3
-    ##     mgmt       country
-    ##    <chr>         <chr>
-    ## 1   AFMA     Australia
-    ## 2 CCAMLR Multinational
-    ## 3  CCSBT Multinational
-    ## 4    CFP     Argentina
-    ## 5 DETMCM  South Africa
-    ## 6    DFO        Canada
-    ## # ... with 1 more variables: managementauthority <chr>
-    ## 
-    ## $stock
-    ## # A tibble: 6 x 9
-    ##        stockid    tsn     scientificname      commonname
-    ##          <chr>  <dbl>              <chr>           <chr>
-    ## 1 ACADREDGOMGB 166774 Sebastes fasciatus Acadian redfish
-    ## 2      AFLONCH 166156    Beryx splendens       Alfonsino
-    ## 3       ALBAIO 172419   Thunnus alalunga   albacore tuna
-    ## 4      ALBAMED 172419   Thunnus alalunga   albacore tuna
-    ## 5     ALBANATL 172419   Thunnus alalunga   Albacore tuna
-    ## 6     ALBANPAC 172419   Thunnus alalunga   Albacore tuna
-    ## # ... with 5 more variables: areaid <chr>, stocklong <chr>, region <chr>,
-    ## #   inmyersdb <dbl>, myersstockid <chr>
-    ## 
-    ## $taxonomy
-    ## # A tibble: 6 x 15
-    ##     tsn       scientificname  kingdom     phylum      classname
-    ##   <dbl>                <chr>    <chr>      <chr>          <chr>
-    ## 1  -999 Pseudocarcinus gigas Animalia Arthropoda   Malacostraca
-    ## 2  -997        Haliotis iris Animalia   Mollusca     Gastropoda
-    ## 3  -996         Haliotis spp Animalia   Mollusca     Gastropoda
-    ## 4  -995       Haliotis midae Animalia   Mollusca     Gastropoda
-    ## 5  -994  Sprattus fuengensis Animalia   Chordata Actinopterygii
-    ## 6  -993 Pleuroncodes monodon Animalia Arthropoda   Malacostraca
-    ## # ... with 10 more variables: ordername <chr>, family <chr>, genus <chr>,
-    ## #   species <chr>, myersname <chr>, commonname1 <chr>, commonname2 <chr>,
-    ## #   myersscientificname <chr>, myersfamily <chr>, FisheryType <chr>
-    ## 
-    ## $timeseries
-    ## # A tibble: 6 x 6
-    ##                              assessid      stockid
-    ##                                 <chr>        <chr>
-    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 2 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 3 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 4 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 5 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 6 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## # ... with 4 more variables: stocklong <chr>, tsid <chr>, tsyear <dbl>,
-    ## #   tsvalue <dbl>
-    ## 
-    ## $timeseries_ids_views
-    ## # A tibble: 6 x 26
-    ##                              assessid      stockid
-    ##                                 <chr>        <chr>
-    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 2        IFOP-AFLONCH-1998-2011-CHING      AFLONCH
-    ## 3         IOTC-ALBAIO-1950-2010-CHING       ALBAIO
-    ## 4       ICCAT-ALBAMED-1956-2011-CHING      ALBAMED
-    ## 5      ICCAT-ALBANATL-1950-2010-CHING     ALBANATL
-    ## 6        ISC-ALBANPAC-1952-2010-CHING     ALBANPAC
-    ## # ... with 24 more variables: stocklong <chr>, TB <chr>, SSB <chr>,
-    ## #   TN <chr>, R <chr>, TC <chr>, TL <chr>, F <chr>, ER <chr>,
-    ## #   BdivBmsy <chr>, SSBdivSSBmsy <chr>, FdivFmsy <chr>, UdivUmsy <chr>,
-    ## #   Btouse <chr>, Ctouse <chr>, Utouse <chr>, BdivBmsytouse <chr>,
-    ## #   UdivUmsytouse <chr>, BdivBmgt <lgl>, SSBdivSSBmgt <chr>,
-    ## #   FdivFmgt <chr>, UdivUmgt <chr>, BdivBmgttouse <chr>,
-    ## #   UdivUmgttouse <chr>
-    ## 
-    ## $timeseries_units_views
-    ## # A tibble: 6 x 11
-    ##                              assessid      stockid
-    ##                                 <chr>        <chr>
-    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 2        IFOP-AFLONCH-1998-2011-CHING      AFLONCH
-    ## 3         IOTC-ALBAIO-1950-2010-CHING       ALBAIO
-    ## 4       ICCAT-ALBAMED-1956-2011-CHING      ALBAMED
-    ## 5      ICCAT-ALBANATL-1950-2010-CHING     ALBANATL
-    ## 6        ISC-ALBANPAC-1952-2010-CHING     ALBANPAC
-    ## # ... with 9 more variables: stocklong <chr>, TB <chr>, SSB <chr>,
-    ## #   TN <chr>, R <chr>, TC <chr>, TL <chr>, F <chr>, ER <chr>
-    ## 
-    ## $timeseries_values_views
-    ## # A tibble: 6 x 27
-    ##                              assessid      stockid
-    ##                                 <chr>        <chr>
-    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 2 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 3 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 4 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 5 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## 6 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
-    ## # ... with 25 more variables: stocklong <chr>, year <dbl>, TB <dbl>,
-    ## #   SSB <dbl>, TN <lgl>, R <dbl>, TC <dbl>, TL <dbl>, F <dbl>, ER <dbl>,
-    ## #   `B/Bmsy` <dbl>, `SSB/SSBmsy` <dbl>, `F/Fmsy` <dbl>, `U/Umsy` <dbl>,
-    ## #   Btouse <dbl>, Ctouse <dbl>, Utouse <dbl>, `B/Bmsytouse` <dbl>,
-    ## #   `U/Umsytouse` <dbl>, `B/Bmgt` <lgl>, `SSB/SSBmgt` <lgl>,
-    ## #   `F/Fmgt` <lgl>, `U/Umgt` <lgl>, `B/Bmgttouse` <dbl>,
-    ## #   `U/Umgttouse` <dbl>
-    ## 
-    ## $tsmetrics
-    ## # A tibble: 6 x 6
-    ##               tscategory       tsshort
-    ##                    <chr>         <chr>
-    ## 1 OTHER TIME SERIES DATA            AQ
-    ## 2 OTHER TIME SERIES DATA           ASP
-    ## 3          TOTAL BIOMASS BdivBmgt-calc
-    ## 4          TOTAL BIOMASS BdivBmgttouse
-    ## 5          TOTAL BIOMASS BdivBmsy-calc
-    ## 6          TOTAL BIOMASS      BdivBmsy
-    ## # ... with 4 more variables: tslong <chr>, tsunitsshort <chr>,
-    ## #   tsunitslong <chr>, tsunique <chr>
-
 ``` r
+# Join our variables of interest
 ourdata <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
   by = c("assessid", "stockid")) %>%
   rename(SSB = SSB.x, SSBunits = SSB.y, Total_Catch = TC.x, Total_Catch_units = TC.y) %>%
@@ -464,11 +211,6 @@ Write code to pull all marine areas (listed in `ram$area`) that contain a certai
 ``` r
 GeorgesBank <- ram$area %>%
   filter(areaname == "Georges Bank")
-```
-
-    ## Warning: package 'bindrcpp' was built under R version 3.4.2
-
-``` r
 GeorgesBank
 ```
 
@@ -485,8 +227,8 @@ GeorgesBank
 We are interested in mapping the data from just the areas where Atlantic Cod are found. Using the table you built above, pull out distinct areas that contain Atlantic Cod populations into a new tidytable. Hint: you may want to use functions like `filter()` or `distinct()`
 
 ``` r
-# we don't have area id because we took that out of ourdata table above. 
-# we're building another table!
+# We don't have areaid because we took that out of our data table above. 
+# We're building another table to include it!
 
 ourdata_withareaid <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
   by = c("assessid", "stockid")) %>%
@@ -524,7 +266,7 @@ Using bracket notation and or the `filter()` and `pull()` functions, try pulling
 Create a vector of ids of areas with Atlantic Cod and in Canada.
 
 ``` r
-#Experiment
+#First experiment
 cod_only %>%
   select(country, areaid) %>%
   distinct() %>%
@@ -556,8 +298,8 @@ cod_only %>%
     ## # ... with 2 more variables: areaname <chr>, alternateareaname <chr>
 
 ``` r
-# This told us that first 8 ids referred to DFO which is Canada, and NAFO
-# which is multinational but next to Canada, so we'll include both of these
+# The output above showed us that first 8 ids referred to DFO which is Canada, and NAFO
+# which is multinational but next to Canadian waters, so we'll include both of these
 
 CanadianCodareas <- cod_only %>%
    select(country, areaid) %>%
@@ -566,6 +308,7 @@ CanadianCodareas <- cod_only %>%
   filter(areatype == "DFO" | areatype == "NAFO") %>%
   pull(areaid)
 
+#Vector of ids with Atlantic cod and in or adjacent to Canadian waters
 CanadianCodareas
 ```
 
@@ -586,7 +329,7 @@ CanadianCodCatch <- cod_only %>%
   group_by(year) %>%
   summarize(CN_catch=sum(Total_Catch, na.rm = TRUE))
 
-## note: below is an alternative way that we could have written this 
+# note: below is an alternative way that we could have written this 
 # and it gives same result so we are including it for reference
 
 # CanadianCodCatch <- cod_only %>%
@@ -605,11 +348,11 @@ plot1 <- ggplot(CanadianCodCatch, aes(y = CN_catch, x = year)) +
 plot1  
 ```
 
-![](fish-assignment_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](fish-assignment_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 **Question:** How does this graph compare to the one presented above?
 
-Very similar trend to original plot, with slightly higher overrall number of fish, probably because we included the multinational fisheries bordering Canadian waters
+It shows a very similar trend of peak and collapse as the original plot, with slightly higher overall number of fish, probably because we also included the multinational fisheries bordering Canadian waters.
 
 ------------------------------------------------------------------------
 
@@ -625,7 +368,8 @@ We seek to replicate the temporal trend in stock declines shown in [Worm et al 2
 
 **Question 1:** What years does this plot include? What is it plotting?
 
-1950 - 2003 Percent of taxa classified as collapsed with diamonds representing collapses by year, triangles representing cumulative collapse, blue representing species poor large marine ecosystem areas, red representing species rich areas, and black represnting combined total (poor and rich areas).
+-   Plot includes the years 1950 - 2003
+-   It shows the percent of taxa classified as collapsed with diamonds representing collapses by year, triangles representing cumulative collapse, blue representing species poor large marine ecosystem areas (LMEs), red representing species rich areas, and black represnting the combined total (of poor and rich areas).
 
 Task 1: Plotting total taxa caught worldwide 1950-2006
 ------------------------------------------------------
@@ -635,7 +379,7 @@ Adapting the table you created in the first exercise, select and manipulate the 
 Hint: you may want to use functions like `group_by()`, `tally()` and be sure to carefully consider how to handle or omit missing values.
 
 ``` r
-## we need rows by year and a tally of each species caught for each year
+# we need rows by year and a tally of each species caught for each year
 tallied_species <- ourdata %>%
   filter(year >= 1950 & year <= 2006) %>%
   group_by(year) %>%
@@ -679,7 +423,7 @@ total_taxa_plot <- ggplot(tallied_species, aes(x = year, y = count)) +
 total_taxa_plot
 ```
 
-![](fish-assignment_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](fish-assignment_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
 Task 2: Removing incomplete datasets
 ------------------------------------
@@ -688,8 +432,8 @@ Species can either have missing data (within a series) or a time range that just
 
 ``` r
 # we need to get stockid back into our dataset
-# we could probably just fix this in an earlier step but we're going to 
-# build a new table with it first
+# we could probably just fix this in an earlier step but we're going to build a new table with it here
+
 ourdata_withstockid <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
   by = c("assessid", "stockid")) %>%
   rename(SSB = SSB.x, SSBunits = SSB.y, Total_Catch = TC.x, Total_Catch_units = TC.y) %>%
@@ -704,7 +448,7 @@ stockid_fullyearrange <- ourdata_withstockid %>%
   filter(count == 57) %>% # 57 is our full range of years 1950-2006
   select("stockid") # built character vector
 
-head(stockid_fullyearrange) # character vector looks correct
+head(stockid_fullyearrange) # character vector looks plausible
 ```
 
     ## # A tibble: 6 x 1
@@ -722,6 +466,7 @@ head(stockid_fullyearrange) # character vector looks correct
 63 taxa! See code below.
 
 ``` r
+# There are 90 stock ids with data for the full range.
 count(stockid_fullyearrange)
 ```
 
@@ -731,13 +476,14 @@ count(stockid_fullyearrange)
     ## 1    90
 
 ``` r
-## There are 90 stock ids with data for the full range. 
-## But now we need to match this with species name for taxa count.
+# But now we need to match this with species name for taxa count.
 
 ## Below code gives us full catch data again but filtered for our 90 stock ids
 complete_catch_data <- semi_join(ourdata_withstockid, stockid_fullyearrange) %>%
   filter(year >= 1950 & year <= 2006)  # directed year range
+```
 
+``` r
 ## This gives us a count of taxa from the new table we just created
 complete_catch_data %>% 
   group_by(scientificname) %>%
@@ -757,7 +503,7 @@ Task 3: Which fisheries have collapsed?
 A fishery may be considered *collapsed* when total catch (TC) falls below 10% of its peak. For those stocks with complete data sets, create a new tidy table including columns: `stockid`, `TC`, `year`, `collapsed`, and `cumulative`, where `collapsed` is a logical (True or False) for whether or not that fishery could be considered collapsed in that year, and `cumulative` is the count of total years the fishery has been collapsed at that point in time.
 
 ``` r
-#For each species, find peak TC between 1950 and 2006
+#First attempt to find peak TC between 1950 and 2006
  test_0 <- complete_catch_data %>%
           group_by(stockid) %>%
           mutate(PeakTC = max(Total_Catch)) %>% # do more mutate for % and if collapsed
@@ -798,11 +544,11 @@ tail(test_0)
     ## 6 YTSNAPSATLCGM  2006          NA     NA            NA        NA
     ## # ... with 1 more variables: Cumulative <int>
 
-\*\*\*Note: what the above table building revealed is that we haven't filtered all missing values out yet. Some of the taxa which we assumed had complete data based on having an entry for every year between 1950-2006 are actually missing stock or total catch data.
+What the above table building revealed is that we haven't filtered all missing values out yet. Some of the taxa which we assumed had complete data based on having an entry for every year between 1950-2006 are actually missing stock or total catch data.
 
 Another concern is that some fisheries are recorded as collapsed in earlier years because the total catch was initially less than 10% of the peak total catch. This doesn't really make sense because it is more of a statement of the fishing economy than the health of that fish stock at the time. This needs to be examined further and the count of cumulative collapsed years will not really be accurate until this has been resolved.
 
-Ideas about two ways to filter missing data: <https://stackoverflow.com/questions/26665319/removing-na-in-dplyr-pipe?rq=1>
+We looked into two ways to filter the missing data: <https://stackoverflow.com/questions/26665319/removing-na-in-dplyr-pipe?rq=1>
 
 -   na.omit
 -   complete.cases
@@ -971,7 +717,13 @@ test2 %>%
     ## 10 BLACKROCKNPCOAST
     ## # ... with 41 more rows
 
-After checking head, tail and stock ids for the two methods, either option for omitting NA's appears to give identical results. We should go forward with one method but we'll keep all of the code above as a reminder for the future.
+``` r
+all.equal(test1,test2)
+```
+
+    ## [1] TRUE
+
+Either option for omitting NA's appears to give identical results. We should go forward with one method but we'll keep all of the code above as a reminder for the future.
 
 ``` r
 test_for_collapsed <- complete_catch_data %>%
@@ -995,28 +747,14 @@ TCplot <- ggplot(test_for_collapsed, aes(x=year, y=Total_Catch, fill=stockid)) +
     ylab("Total catch per stockid")+
     xlab("Year")+
     theme_bw() +
-    theme(text=element_text(size=16)) +
     theme(legend.position="bottom")
 
 TCplot
 ```
 
-![](fish-assignment_files/figure-markdown_github/unnamed-chunk-15-1.png)
+![](fish-assignment_files/figure-markdown_github/unnamed-chunk-17-1.png)
 
-Additional idea aboutthe TC collapse - there's probably a way we can set up the conditional so only the values of TC that are below 10% and come *after* the peak TC value (eg based on comparing the year of TC &gt; peak of PeakTC) are counted as collapsed
-
-Task 5: Calculating percent collapsed
--------------------------------------
-
-To replicate the original plot, we must calculate the percent of taxa collapsed over time. Using the `summarise()` function, and only the core stocks that have data across the full interval, build a new tidy table that gives the fraction of all stocks that are collapsed in each year and include a cumulative column that gives the fraction of all years (between 1950 and each year) that has experienced at least one collapse.
-
-Hint: when logical vectors are summed or converted to numerics, TRUE = 1 and FALSE = 0.
-
-Task 6: Plotting proportion collapsed over time.
-------------------------------------------------
-
-Using `geom_line` twice to plot two individual lines (of different colors please), plot the cumulative number of collapsed fisheries through time and the fraction of collapsed fishers through time on the same graph.
-
-Hint: try using `scale_y_reverse()` to flip the y axis for a different perspective on these fractions.
-
-**Question 3:** What does this graph show us? How is it presenting information differently than the original graph for this exercise? Is it presenting the same information?
+``` r
+# Ideas for futher work
+#There's probably a way we can set up the conditional so only the values of TotalCatc that are below 10% and come *after* the peak TC value (eg based on comparing the year of TC > peak of PeakTC) are counted as collapsed
+```
