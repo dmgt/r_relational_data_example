@@ -16,7 +16,27 @@ First, load in the necessary libraries. Note that this time we need a package we
 
 ``` r
 library("tidyverse")
+```
+
+    ## Warning: package 'tidyverse' was built under R version 3.4.3
+
+    ## Warning: package 'tidyr' was built under R version 3.4.2
+
+    ## Warning: package 'readr' was built under R version 3.4.2
+
+    ## Warning: package 'purrr' was built under R version 3.4.2
+
+    ## Warning: package 'dplyr' was built under R version 3.4.2
+
+    ## Warning: package 'forcats' was built under R version 3.4.3
+
+``` r
 library("readxl")
+```
+
+    ## Warning: package 'readxl' was built under R version 3.4.3
+
+``` r
 library("scales") # For y-axis labels not in scientific notation - is there a better way to do this since 2012?
 ```
 
@@ -53,14 +73,15 @@ head(ram$area)
 ```
 
     ## # A tibble: 6 x 6
-    ##   country   areatype areacode areaname         alternateareana~ areaid    
-    ##   <chr>     <chr>    <chr>    <chr>            <chr>            <chr>     
-    ## 1 Argentina CFP      ARG-N    Northern Argent~ NA               Argentina~
-    ## 2 Argentina CFP      ARG-S    Southern Argent~ NA               Argentina~
-    ## 3 Australia AFMA     CASCADE  Cascade Plateau  NA               Australia~
-    ## 4 Australia AFMA     ESE      Eastern half of~ NA               Australia~
-    ## 5 Australia AFMA     GAB      Great Australia~ NA               Australia~
-    ## 6 Australia AFMA     MI       Macquarie Island <NA>             Australia~
+    ##     country areatype areacode                            areaname
+    ##       <chr>    <chr>    <chr>                               <chr>
+    ## 1 Argentina      CFP    ARG-N                  Northern Argentina
+    ## 2 Argentina      CFP    ARG-S                  Southern Argentina
+    ## 3 Australia     AFMA  CASCADE                     Cascade Plateau
+    ## 4 Australia     AFMA      ESE Eastern half of Southeast Australia
+    ## 5 Australia     AFMA      GAB              Great Australian Bight
+    ## 6 Australia     AFMA       MI                    Macquarie Island
+    ## # ... with 2 more variables: alternateareaname <chr>, areaid <chr>
 
 Exercise 1: Investigating the North-Atlantic Cod
 ================================================
@@ -175,218 +196,239 @@ lapply(ram, head)
 
     ## $area
     ## # A tibble: 6 x 6
-    ##   country   areatype areacode areaname         alternateareana~ areaid    
-    ##   <chr>     <chr>    <chr>    <chr>            <chr>            <chr>     
-    ## 1 Argentina CFP      ARG-N    Northern Argent~ NA               Argentina~
-    ## 2 Argentina CFP      ARG-S    Southern Argent~ NA               Argentina~
-    ## 3 Australia AFMA     CASCADE  Cascade Plateau  NA               Australia~
-    ## 4 Australia AFMA     ESE      Eastern half of~ NA               Australia~
-    ## 5 Australia AFMA     GAB      Great Australia~ NA               Australia~
-    ## 6 Australia AFMA     MI       Macquarie Island <NA>             Australia~
+    ##     country areatype areacode                            areaname
+    ##       <chr>    <chr>    <chr>                               <chr>
+    ## 1 Argentina      CFP    ARG-N                  Northern Argentina
+    ## 2 Argentina      CFP    ARG-S                  Southern Argentina
+    ## 3 Australia     AFMA  CASCADE                     Cascade Plateau
+    ## 4 Australia     AFMA      ESE Eastern half of Southeast Australia
+    ## 5 Australia     AFMA      GAB              Great Australian Bight
+    ## 6 Australia     AFMA       MI                    Macquarie Island
+    ## # ... with 2 more variables: alternateareaname <chr>, areaid <chr>
     ## 
     ## $assessment
     ## # A tibble: 6 x 18
-    ##   assessid    assessorid stockid stocklong    recorder daterecorded       
-    ##   <chr>       <chr>      <chr>   <chr>        <chr>    <dttm>             
-    ## 1 NEFSC-ACAD~ NEFSC      ACADRE~ Acadian red~ MILLER   2009-04-16 00:00:00
-    ## 2 IFOP-AFLON~ IFOP       AFLONCH Alfonsino C~ CHING    2013-03-18 00:00:00
-    ## 3 IOTC-ALBAI~ IOTC       ALBAIO  Albacore tu~ CHING    2012-09-28 00:00:00
-    ## 4 ICCAT-ALBA~ ICCAT      ALBAMED Albacore tu~ CHING    2012-09-28 00:00:00
-    ## 5 ICCAT-ALBA~ ICCAT      ALBANA~ Albacore tu~ CHING    2012-09-25 00:00:00
-    ## 6 ISC-ALBANP~ ISC        ALBANP~ Albacore tu~ CHING    2012-09-28 00:00:00
-    ## # ... with 12 more variables: dateloaded <dttm>, assessyear <chr>,
+    ##                              assessid assessorid      stockid
+    ##                                 <chr>      <chr>        <chr>
+    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER      NEFSC ACADREDGOMGB
+    ## 2        IFOP-AFLONCH-1998-2011-CHING       IFOP      AFLONCH
+    ## 3         IOTC-ALBAIO-1950-2010-CHING       IOTC       ALBAIO
+    ## 4       ICCAT-ALBAMED-1956-2011-CHING      ICCAT      ALBAMED
+    ## 5      ICCAT-ALBANATL-1950-2010-CHING      ICCAT     ALBANATL
+    ## 6        ISC-ALBANPAC-1952-2010-CHING        ISC     ALBANPAC
+    ## # ... with 15 more variables: stocklong <chr>, recorder <chr>,
+    ## #   daterecorded <dttm>, dateloaded <dttm>, assessyear <chr>,
     ## #   assesssource <chr>, contacts <chr>, notes <chr>, pdffile <chr>,
     ## #   assess <dbl>, refpoints <dbl>, assessmethod <chr>,
     ## #   assesscomments <chr>, xlsfilename <chr>, mostrecent <dbl>
     ## 
     ## $assessmethod
     ## # A tibble: 6 x 3
-    ##   category               methodshort methodlong                           
-    ##   <chr>                  <chr>       <chr>                                
-    ## 1 Biomass dynamics model AAPM        Age-aggregated surplus production mo~
-    ## 2 Biomass dynamics model ASPIC       Surplus production model             
-    ## 3 Biomass dynamics model ASPM        Age-structured surplus production mo~
-    ## 4 Biomass dynamics model BBM         Bayesian Biomass Model               
-    ## 5 Biomass dynamics model BSPM        Bayesian Surplus Production Model    
-    ## 6 Biomass dynamics model CSM         Collie-Sissenwine model              
+    ##                 category methodshort
+    ##                    <chr>       <chr>
+    ## 1 Biomass dynamics model        AAPM
+    ## 2 Biomass dynamics model       ASPIC
+    ## 3 Biomass dynamics model        ASPM
+    ## 4 Biomass dynamics model         BBM
+    ## 5 Biomass dynamics model        BSPM
+    ## 6 Biomass dynamics model         CSM
+    ## # ... with 1 more variables: methodlong <chr>
     ## 
     ## $assessor
     ## # A tibble: 6 x 4
-    ##   assessorid mgmt  country       assessorfull                             
-    ##   <chr>      <chr> <chr>         <chr>                                    
-    ## 1 ABARES     AFMA  Australia     "Australian Bureau of Agricultural and R~
-    ## 2 ADFG       NMFS  USA           Alaska Department of Fish and Game       
-    ## 3 ADRIAMED   GFCM  Multinational FAO Regional Project: Scientific Coopera~
-    ## 4 AFSC       NMFS  USA           Alaska Fisheries Science Center          
-    ## 5 AFWG       ICES  Multinational Arctic Fisheries Working Group           
-    ## 6 ASMFC      NMFS  USA           Atlantic States Marine Fisheries Commiss~
+    ##   assessorid  mgmt       country
+    ##        <chr> <chr>         <chr>
+    ## 1     ABARES  AFMA     Australia
+    ## 2       ADFG  NMFS           USA
+    ## 3   ADRIAMED  GFCM Multinational
+    ## 4       AFSC  NMFS           USA
+    ## 5       AFWG  ICES Multinational
+    ## 6      ASMFC  NMFS           USA
+    ## # ... with 1 more variables: assessorfull <chr>
     ## 
     ## $biometrics
     ## # A tibble: 6 x 7
-    ##   category  subcategory bioshort biolong        biounitsshort biounitslong
-    ##   <chr>     <chr>       <chr>    <chr>          <chr>         <chr>       
-    ## 1 OTHER BI~ LIFE HISTO~ A50-1    Age at 50% ma~ yr            years       
-    ## 2 OTHER BI~ LIFE HISTO~ A50-2    Age at 50% ma~ yr            years       
-    ## 3 OTHER BI~ LIFE HISTO~ A50max   Maximum age a~ 0.5yr         half-year   
-    ## 4 OTHER BI~ LIFE HISTO~ A50max   Maximum age a~ yr            years       
-    ## 5 OTHER BI~ LIFE HISTO~ A50min   Minimum age a~ 0.5yr         half-year   
-    ## 6 OTHER BI~ LIFE HISTO~ A50min   Minimum age a~ yr            years       
-    ## # ... with 1 more variable: biounique <chr>
+    ##           category  subcategory bioshort
+    ##              <chr>        <chr>    <chr>
+    ## 1 OTHER BIOMETRICS LIFE HISTORY    A50-1
+    ## 2 OTHER BIOMETRICS LIFE HISTORY    A50-2
+    ## 3 OTHER BIOMETRICS LIFE HISTORY   A50max
+    ## 4 OTHER BIOMETRICS LIFE HISTORY   A50max
+    ## 5 OTHER BIOMETRICS LIFE HISTORY   A50min
+    ## 6 OTHER BIOMETRICS LIFE HISTORY   A50min
+    ## # ... with 4 more variables: biolong <chr>, biounitsshort <chr>,
+    ## #   biounitslong <chr>, biounique <chr>
     ## 
     ## $bioparams
     ## # A tibble: 6 x 7
-    ##   assessid    stockid  stocklong     bioid biovalue  bioyear bionotes     
-    ##   <chr>       <chr>    <chr>         <chr> <chr>     <chr>   <chr>        
-    ## 1 NEFSC-ACAD~ ACADRED~ Acadian redf~ A50-~ 5         2008    <NA>         
-    ## 2 NEFSC-ACAD~ ACADRED~ Acadian redf~ Bmgt~ 883217.3~ NULL    SSBmsy-MT    
-    ## 3 NEFSC-ACAD~ ACADRED~ Acadian redf~ Bmsy~ 883217.3~ NULL    SSBmsy-MT    
-    ## 4 NEFSC-ACAD~ ACADRED~ Acadian redf~ F50%~ 3.769999~ 2008    F50% MSP-bas~
-    ## 5 NEFSC-ACAD~ ACADRED~ Acadian redf~ F-AG~ 10+       2008    Fully-select~
-    ## 6 NEFSC-ACAD~ ACADRED~ Acadian redf~ Fmsy~ 3.769999~ NULL    F50%-1/yr    
+    ##                              assessid      stockid
+    ##                                 <chr>        <chr>
+    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 2 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 3 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 4 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 5 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 6 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## # ... with 5 more variables: stocklong <chr>, bioid <chr>, biovalue <chr>,
+    ## #   bioyear <chr>, bionotes <chr>
     ## 
     ## $bioparams_ids_views
     ## # A tibble: 6 x 20
-    ##   assessid  stockid  stocklong  Bmsy  SSBmsy Nmsy  MSY   Fmsy  Umsy  B0   
-    ##   <chr>     <chr>    <chr>      <chr> <chr>  <chr> <chr> <chr> <chr> <chr>
-    ## 1 NEFSC-AC~ ACADRED~ Acadian r~ <NA>  SSBms~ <NA>  MSY-~ Fmsy~ Umsy~ <NA> 
-    ## 2 IOTC-ALB~ ALBAIO   Albacore ~ Bmsy~ <NA>   <NA>  MSY-~ Fmsy~ <NA>  <NA> 
-    ## 3 ICCAT-AL~ ALBAMED  Albacore ~ Bmsy~ <NA>   <NA>  MSY-~ <NA>  <NA>  B0-MT
-    ## 4 ICCAT-AL~ ALBANATL Albacore ~ Bmsy~ SSBms~ <NA>  MSY-~ Fmsy~ Umsy~ B0-MT
-    ## 5 ISC-ALBA~ ALBANPAC Albacore ~ Bmsy~ SSBms~ <NA>  MSY-~ Fmsy~ Umsy~ B0-MT
-    ## 6 ICCAT-AL~ ALBASATL Albacore ~ Bmsy~ <NA>   <NA>  MSY-~ <NA>  <NA>  <NA> 
-    ## # ... with 10 more variables: SSB0 <chr>, M <chr>, Bmsytouse <chr>,
-    ## #   Umsytouse <chr>, Bmgt <lgl>, SSBmgt <chr>, Fmgt <chr>, Umgt <chr>,
-    ## #   Bmgttouse <chr>, Umgttouse <chr>
+    ##                              assessid      stockid
+    ##                                 <chr>        <chr>
+    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 2         IOTC-ALBAIO-1950-2010-CHING       ALBAIO
+    ## 3       ICCAT-ALBAMED-1956-2011-CHING      ALBAMED
+    ## 4      ICCAT-ALBANATL-1950-2010-CHING     ALBANATL
+    ## 5        ISC-ALBANPAC-1952-2010-CHING     ALBANPAC
+    ## 6      ICCAT-ALBASATL-1956-2010-CHING     ALBASATL
+    ## # ... with 18 more variables: stocklong <chr>, Bmsy <chr>, SSBmsy <chr>,
+    ## #   Nmsy <chr>, MSY <chr>, Fmsy <chr>, Umsy <chr>, B0 <chr>, SSB0 <chr>,
+    ## #   M <chr>, Bmsytouse <chr>, Umsytouse <chr>, Bmgt <lgl>, SSBmgt <chr>,
+    ## #   Fmgt <chr>, Umgt <chr>, Bmgttouse <chr>, Umgttouse <chr>
     ## 
     ## $bioparams_units_views
     ## # A tibble: 6 x 16
-    ##   assessid   stockid stocklong  Bmsy  SSBmsy Nmsy  MSY   Fmsy  Umsy  B0   
-    ##   <chr>      <chr>   <chr>      <chr> <chr>  <chr> <chr> <chr> <chr> <chr>
-    ## 1 NEFSC-ACA~ ACADRE~ Acadian r~ <NA>  MT     <NA>  MT    1/yr  ratio <NA> 
-    ## 2 IOTC-ALBA~ ALBAIO  Albacore ~ MT    <NA>   <NA>  MT    1/yr  <NA>  <NA> 
-    ## 3 ICCAT-ALB~ ALBAMED Albacore ~ MT    <NA>   <NA>  MT    <NA>  <NA>  MT   
-    ## 4 ICCAT-ALB~ ALBANA~ Albacore ~ MT    MT     <NA>  MT    1/yr  ratio MT   
-    ## 5 ISC-ALBAN~ ALBANP~ Albacore ~ MT    MT     <NA>  MT    1/yr  ratio MT   
-    ## 6 ICCAT-ALB~ ALBASA~ Albacore ~ MT    <NA>   <NA>  MT    <NA>  <NA>  <NA> 
-    ## # ... with 6 more variables: SSB0 <chr>, M <chr>, Bmgt <lgl>,
-    ## #   SSBmgt <chr>, Fmgt <chr>, Umgt <chr>
+    ##                              assessid      stockid
+    ##                                 <chr>        <chr>
+    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 2         IOTC-ALBAIO-1950-2010-CHING       ALBAIO
+    ## 3       ICCAT-ALBAMED-1956-2011-CHING      ALBAMED
+    ## 4      ICCAT-ALBANATL-1950-2010-CHING     ALBANATL
+    ## 5        ISC-ALBANPAC-1952-2010-CHING     ALBANPAC
+    ## 6      ICCAT-ALBASATL-1956-2010-CHING     ALBASATL
+    ## # ... with 14 more variables: stocklong <chr>, Bmsy <chr>, SSBmsy <chr>,
+    ## #   Nmsy <chr>, MSY <chr>, Fmsy <chr>, Umsy <chr>, B0 <chr>, SSB0 <chr>,
+    ## #   M <chr>, Bmgt <lgl>, SSBmgt <chr>, Fmgt <chr>, Umgt <chr>
     ## 
     ## $bioparams_values_views
     ## # A tibble: 6 x 20
-    ##   assessid   stockid stocklong    Bmsy SSBmsy  Nmsy    MSY    Fmsy    Umsy
-    ##   <chr>      <chr>   <chr>       <dbl>  <dbl> <dbl>  <dbl>   <dbl>   <dbl>
-    ## 1 NEFSC-ACA~ ACADRE~ Acadian r~     NA 271000    NA  10139  0.0377  0.0163
-    ## 2 IOTC-ALBA~ ALBAIO  Albacore ~ 346291     NA    NA  27022  0.180  NA     
-    ## 3 ICCAT-ALB~ ALBAMED Albacore ~ 167213     NA    NA  28900 NA      NA     
-    ## 4 ICCAT-ALB~ ALBANA~ Albacore ~  86556  53660    NA  29000  0.175   0.228 
-    ## 5 ISC-ALBAN~ ALBANP~ Albacore ~ 806325 342854    NA 119094  0.122   0.147 
-    ## 6 ICCAT-ALB~ ALBASA~ Albacore ~ 200546     NA    NA  27964 NA      NA     
-    ## # ... with 11 more variables: B0 <dbl>, SSB0 <dbl>, M <dbl>,
-    ## #   Bmsytouse <dbl>, Umsytouse <dbl>, Bmgt <lgl>, SSBmgt <dbl>,
+    ##                              assessid      stockid
+    ##                                 <chr>        <chr>
+    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 2         IOTC-ALBAIO-1950-2010-CHING       ALBAIO
+    ## 3       ICCAT-ALBAMED-1956-2011-CHING      ALBAMED
+    ## 4      ICCAT-ALBANATL-1950-2010-CHING     ALBANATL
+    ## 5        ISC-ALBANPAC-1952-2010-CHING     ALBANPAC
+    ## 6      ICCAT-ALBASATL-1956-2010-CHING     ALBASATL
+    ## # ... with 18 more variables: stocklong <chr>, Bmsy <dbl>, SSBmsy <dbl>,
+    ## #   Nmsy <dbl>, MSY <dbl>, Fmsy <dbl>, Umsy <dbl>, B0 <dbl>, SSB0 <dbl>,
+    ## #   M <dbl>, Bmsytouse <dbl>, Umsytouse <dbl>, Bmgt <lgl>, SSBmgt <dbl>,
     ## #   Fmgt <dbl>, Umgt <dbl>, Bmgttouse <dbl>, Umgttouse <dbl>
     ## 
     ## $management
     ## # A tibble: 6 x 3
-    ##   mgmt   country       managementauthority                                
-    ##   <chr>  <chr>         <chr>                                              
-    ## 1 AFMA   Australia     Australian Fisheries Management Authority, Austral~
-    ## 2 CCAMLR Multinational Commission for the Conservation of Antarctic Marin~
-    ## 3 CCSBT  Multinational Commission for the Conservation of Southern Bluefi~
-    ## 4 CFP    Argentina     Consejo Federal Pesquero, Argentina national manag~
-    ## 5 DETMCM South Africa  South African national management, Fisheries Branc~
-    ## 6 DFO    Canada        Department of Fisheries and Oceans, Canada nationa~
+    ##     mgmt       country
+    ##    <chr>         <chr>
+    ## 1   AFMA     Australia
+    ## 2 CCAMLR Multinational
+    ## 3  CCSBT Multinational
+    ## 4    CFP     Argentina
+    ## 5 DETMCM  South Africa
+    ## 6    DFO        Canada
+    ## # ... with 1 more variables: managementauthority <chr>
     ## 
     ## $stock
     ## # A tibble: 6 x 9
-    ##   stockid     tsn scientificname  commonname  areaid  stocklong    region 
-    ##   <chr>     <dbl> <chr>           <chr>       <chr>   <chr>        <chr>  
-    ## 1 ACADRED~ 166774 Sebastes fasci~ Acadian re~ USA-NM~ Acadian red~ US Eas~
-    ## 2 AFLONCH  166156 Beryx splendens Alfonsino   multin~ Alfonsino C~ South ~
-    ## 3 ALBAIO   172419 Thunnus alalun~ albacore t~ multin~ Albacore tu~ Indian~
-    ## 4 ALBAMED  172419 Thunnus alalun~ albacore t~ multin~ Albacore tu~ Medite~
-    ## 5 ALBANATL 172419 Thunnus alalun~ Albacore t~ multin~ Albacore tu~ Atlant~
-    ## 6 ALBANPAC 172419 Thunnus alalun~ Albacore t~ Multin~ Albacore tu~ US Wes~
-    ## # ... with 2 more variables: inmyersdb <dbl>, myersstockid <chr>
+    ##        stockid    tsn     scientificname      commonname
+    ##          <chr>  <dbl>              <chr>           <chr>
+    ## 1 ACADREDGOMGB 166774 Sebastes fasciatus Acadian redfish
+    ## 2      AFLONCH 166156    Beryx splendens       Alfonsino
+    ## 3       ALBAIO 172419   Thunnus alalunga   albacore tuna
+    ## 4      ALBAMED 172419   Thunnus alalunga   albacore tuna
+    ## 5     ALBANATL 172419   Thunnus alalunga   Albacore tuna
+    ## 6     ALBANPAC 172419   Thunnus alalunga   Albacore tuna
+    ## # ... with 5 more variables: areaid <chr>, stocklong <chr>, region <chr>,
+    ## #   inmyersdb <dbl>, myersstockid <chr>
     ## 
     ## $taxonomy
     ## # A tibble: 6 x 15
-    ##     tsn scientificname  kingdom  phylum  classname  ordername family genus
-    ##   <dbl> <chr>           <chr>    <chr>   <chr>      <chr>     <chr>  <chr>
-    ## 1  -999 Pseudocarcinus~ Animalia Arthro~ Malacostr~ Decapoda  Menip~ Pseu~
-    ## 2  -997 Haliotis iris   Animalia Mollus~ Gastropoda Archaeog~ Halio~ Hali~
-    ## 3  -996 Haliotis spp    Animalia Mollus~ Gastropoda Archaeog~ Halio~ Hali~
-    ## 4  -995 Haliotis midae  Animalia Mollus~ Gastropoda Archaeog~ Halio~ Hali~
-    ## 5  -994 Sprattus fueng~ Animalia Chorda~ Actinopte~ Clupeifo~ Clupe~ Spra~
-    ## 6  -993 Pleuroncodes m~ Animalia Arthro~ Malacostr~ Decapoda  Galat~ Pleu~
-    ## # ... with 7 more variables: species <chr>, myersname <chr>,
-    ## #   commonname1 <chr>, commonname2 <chr>, myersscientificname <chr>,
-    ## #   myersfamily <chr>, FisheryType <chr>
+    ##     tsn       scientificname  kingdom     phylum      classname
+    ##   <dbl>                <chr>    <chr>      <chr>          <chr>
+    ## 1  -999 Pseudocarcinus gigas Animalia Arthropoda   Malacostraca
+    ## 2  -997        Haliotis iris Animalia   Mollusca     Gastropoda
+    ## 3  -996         Haliotis spp Animalia   Mollusca     Gastropoda
+    ## 4  -995       Haliotis midae Animalia   Mollusca     Gastropoda
+    ## 5  -994  Sprattus fuengensis Animalia   Chordata Actinopterygii
+    ## 6  -993 Pleuroncodes monodon Animalia Arthropoda   Malacostraca
+    ## # ... with 10 more variables: ordername <chr>, family <chr>, genus <chr>,
+    ## #   species <chr>, myersname <chr>, commonname1 <chr>, commonname2 <chr>,
+    ## #   myersscientificname <chr>, myersfamily <chr>, FisheryType <chr>
     ## 
     ## $timeseries
     ## # A tibble: 6 x 6
-    ##   assessid         stockid   stocklong          tsid        tsyear tsvalue
-    ##   <chr>            <chr>     <chr>              <chr>        <dbl>   <dbl>
-    ## 1 NEFSC-ACADREDGO~ ACADREDG~ Acadian redfish G~ BdivBmgtto~   1913    2.37
-    ## 2 NEFSC-ACADREDGO~ ACADREDG~ Acadian redfish G~ BdivBmgtto~   1914    2.37
-    ## 3 NEFSC-ACADREDGO~ ACADREDG~ Acadian redfish G~ BdivBmgtto~   1915    2.37
-    ## 4 NEFSC-ACADREDGO~ ACADREDG~ Acadian redfish G~ BdivBmgtto~   1916    2.37
-    ## 5 NEFSC-ACADREDGO~ ACADREDG~ Acadian redfish G~ BdivBmgtto~   1917    2.37
-    ## 6 NEFSC-ACADREDGO~ ACADREDG~ Acadian redfish G~ BdivBmgtto~   1918    2.37
+    ##                              assessid      stockid
+    ##                                 <chr>        <chr>
+    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 2 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 3 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 4 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 5 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 6 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## # ... with 4 more variables: stocklong <chr>, tsid <chr>, tsyear <dbl>,
+    ## #   tsvalue <dbl>
     ## 
     ## $timeseries_ids_views
     ## # A tibble: 6 x 26
-    ##   assessid   stockid stocklong   TB    SSB   TN    R     TC    TL    F    
-    ##   <chr>      <chr>   <chr>       <chr> <chr> <chr> <chr> <chr> <chr> <chr>
-    ## 1 NEFSC-ACA~ ACADRE~ Acadian re~ <NA>  SSB-~ <NA>  R-E00 TC-MT TL-MT F-1/~
-    ## 2 IFOP-AFLO~ AFLONCH Alfonsino ~ TB-MT SSB-~ <NA>  R-E00 <NA>  TL-MT <NA> 
-    ## 3 IOTC-ALBA~ ALBAIO  Albacore t~ TB-MT SSB-~ <NA>  R-E00 TC-MT <NA>  <NA> 
-    ## 4 ICCAT-ALB~ ALBAMED Albacore t~ TB-MT <NA>  <NA>  <NA>  TC-MT <NA>  <NA> 
-    ## 5 ICCAT-ALB~ ALBANA~ Albacore t~ TB-MT SSB-~ <NA>  <NA>  TC-MT <NA>  F-1/~
-    ## 6 ISC-ALBAN~ ALBANP~ Albacore t~ TB-MT SSB-~ <NA>  R-E00 TC-MT <NA>  <NA> 
-    ## # ... with 16 more variables: ER <chr>, BdivBmsy <chr>,
-    ## #   SSBdivSSBmsy <chr>, FdivFmsy <chr>, UdivUmsy <chr>, Btouse <chr>,
-    ## #   Ctouse <chr>, Utouse <chr>, BdivBmsytouse <chr>, UdivUmsytouse <chr>,
-    ## #   BdivBmgt <lgl>, SSBdivSSBmgt <chr>, FdivFmgt <chr>, UdivUmgt <chr>,
-    ## #   BdivBmgttouse <chr>, UdivUmgttouse <chr>
+    ##                              assessid      stockid
+    ##                                 <chr>        <chr>
+    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 2        IFOP-AFLONCH-1998-2011-CHING      AFLONCH
+    ## 3         IOTC-ALBAIO-1950-2010-CHING       ALBAIO
+    ## 4       ICCAT-ALBAMED-1956-2011-CHING      ALBAMED
+    ## 5      ICCAT-ALBANATL-1950-2010-CHING     ALBANATL
+    ## 6        ISC-ALBANPAC-1952-2010-CHING     ALBANPAC
+    ## # ... with 24 more variables: stocklong <chr>, TB <chr>, SSB <chr>,
+    ## #   TN <chr>, R <chr>, TC <chr>, TL <chr>, F <chr>, ER <chr>,
+    ## #   BdivBmsy <chr>, SSBdivSSBmsy <chr>, FdivFmsy <chr>, UdivUmsy <chr>,
+    ## #   Btouse <chr>, Ctouse <chr>, Utouse <chr>, BdivBmsytouse <chr>,
+    ## #   UdivUmsytouse <chr>, BdivBmgt <lgl>, SSBdivSSBmgt <chr>,
+    ## #   FdivFmgt <chr>, UdivUmgt <chr>, BdivBmgttouse <chr>,
+    ## #   UdivUmgttouse <chr>
     ## 
     ## $timeseries_units_views
     ## # A tibble: 6 x 11
-    ##   assessid   stockid stocklong   TB    SSB   TN    R     TC    TL    F    
-    ##   <chr>      <chr>   <chr>       <chr> <chr> <chr> <chr> <chr> <chr> <chr>
-    ## 1 NEFSC-ACA~ ACADRE~ Acadian re~ <NA>  MT    <NA>  E00   MT    MT    1/yr 
-    ## 2 IFOP-AFLO~ AFLONCH Alfonsino ~ MT    MT    <NA>  E00   <NA>  MT    <NA> 
-    ## 3 IOTC-ALBA~ ALBAIO  Albacore t~ MT    MT    <NA>  E00   MT    <NA>  <NA> 
-    ## 4 ICCAT-ALB~ ALBAMED Albacore t~ MT    <NA>  <NA>  <NA>  MT    <NA>  <NA> 
-    ## 5 ICCAT-ALB~ ALBANA~ Albacore t~ MT    MT    <NA>  <NA>  MT    <NA>  1/yr 
-    ## 6 ISC-ALBAN~ ALBANP~ Albacore t~ MT    MT    <NA>  E00   MT    <NA>  <NA> 
-    ## # ... with 1 more variable: ER <chr>
+    ##                              assessid      stockid
+    ##                                 <chr>        <chr>
+    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 2        IFOP-AFLONCH-1998-2011-CHING      AFLONCH
+    ## 3         IOTC-ALBAIO-1950-2010-CHING       ALBAIO
+    ## 4       ICCAT-ALBAMED-1956-2011-CHING      ALBAMED
+    ## 5      ICCAT-ALBANATL-1950-2010-CHING     ALBANATL
+    ## 6        ISC-ALBANPAC-1952-2010-CHING     ALBANPAC
+    ## # ... with 9 more variables: stocklong <chr>, TB <chr>, SSB <chr>,
+    ## #   TN <chr>, R <chr>, TC <chr>, TL <chr>, F <chr>, ER <chr>
     ## 
     ## $timeseries_values_views
     ## # A tibble: 6 x 27
-    ##   assessid  stockid stocklong   year    TB    SSB TN         R    TC    TL
-    ##   <chr>     <chr>   <chr>      <dbl> <dbl>  <dbl> <lgl>  <dbl> <dbl> <dbl>
-    ## 1 NEFSC-AC~ ACADRE~ Acadian r~  1913    NA 642256 NA    5.13e7  7.00  7.00
-    ## 2 NEFSC-AC~ ACADRE~ Acadian r~  1914    NA 642246 NA    5.21e7 30.0  30.0 
-    ## 3 NEFSC-AC~ ACADRE~ Acadian r~  1915    NA 642221 NA    5.21e7 40.0  40.0 
-    ## 4 NEFSC-AC~ ACADRE~ Acadian r~  1916    NA 642194 NA    5.21e7 53.0  53.0 
-    ## 5 NEFSC-AC~ ACADRE~ Acadian r~  1917    NA 642167 NA    5.22e7 82.0  82.0 
-    ## 6 NEFSC-AC~ ACADRE~ Acadian r~  1918    NA 642156 NA    5.22e7 73.0  73.0 
-    ## # ... with 17 more variables: F <dbl>, ER <dbl>, `B/Bmsy` <dbl>,
-    ## #   `SSB/SSBmsy` <dbl>, `F/Fmsy` <dbl>, `U/Umsy` <dbl>, Btouse <dbl>,
-    ## #   Ctouse <dbl>, Utouse <dbl>, `B/Bmsytouse` <dbl>, `U/Umsytouse` <dbl>,
-    ## #   `B/Bmgt` <lgl>, `SSB/SSBmgt` <lgl>, `F/Fmgt` <lgl>, `U/Umgt` <lgl>,
-    ## #   `B/Bmgttouse` <dbl>, `U/Umgttouse` <dbl>
+    ##                              assessid      stockid
+    ##                                 <chr>        <chr>
+    ## 1 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 2 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 3 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 4 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 5 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## 6 NEFSC-ACADREDGOMGB-1913-2007-MILLER ACADREDGOMGB
+    ## # ... with 25 more variables: stocklong <chr>, year <dbl>, TB <dbl>,
+    ## #   SSB <dbl>, TN <lgl>, R <dbl>, TC <dbl>, TL <dbl>, F <dbl>, ER <dbl>,
+    ## #   `B/Bmsy` <dbl>, `SSB/SSBmsy` <dbl>, `F/Fmsy` <dbl>, `U/Umsy` <dbl>,
+    ## #   Btouse <dbl>, Ctouse <dbl>, Utouse <dbl>, `B/Bmsytouse` <dbl>,
+    ## #   `U/Umsytouse` <dbl>, `B/Bmgt` <lgl>, `SSB/SSBmgt` <lgl>,
+    ## #   `F/Fmgt` <lgl>, `U/Umgt` <lgl>, `B/Bmgttouse` <dbl>,
+    ## #   `U/Umgttouse` <dbl>
     ## 
     ## $tsmetrics
     ## # A tibble: 6 x 6
-    ##   tscategory             tsshort  tslong tsunitsshort tsunitslong tsunique
-    ##   <chr>                  <chr>    <chr>  <chr>        <chr>       <chr>   
-    ## 1 OTHER TIME SERIES DATA AQ       Aquac~ MT           metric tons AQ-MT   
-    ## 2 OTHER TIME SERIES DATA ASP      Annua~ MT           Metric tons ASP-MT  
-    ## 3 TOTAL BIOMASS          BdivBmg~ Calcu~ dimensionle~ dimensionl~ BdivBmg~
-    ## 4 TOTAL BIOMASS          BdivBmg~ B/Bms~ dimensionle~ dimensionl~ BdivBmg~
-    ## 5 TOTAL BIOMASS          BdivBms~ Calcu~ dimensionle~ dimensionl~ BdivBms~
-    ## 6 TOTAL BIOMASS          BdivBmsy B/Bmsy dimensionle~ dimensionl~ BdivBms~
+    ##               tscategory       tsshort
+    ##                    <chr>         <chr>
+    ## 1 OTHER TIME SERIES DATA            AQ
+    ## 2 OTHER TIME SERIES DATA           ASP
+    ## 3          TOTAL BIOMASS BdivBmgt-calc
+    ## 4          TOTAL BIOMASS BdivBmgttouse
+    ## 5          TOTAL BIOMASS BdivBmsy-calc
+    ## 6          TOTAL BIOMASS      BdivBmsy
+    ## # ... with 4 more variables: tslong <chr>, tsunitsshort <chr>,
+    ## #   tsunitslong <chr>, tsunique <chr>
 
 ``` r
 ourdata <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
@@ -400,15 +442,15 @@ head(ourdata)
 ```
 
     ## # A tibble: 6 x 8
-    ##    year country scientificname    commonname      SSB SSBunits Total_Catch
-    ##   <dbl> <chr>   <chr>             <chr>         <dbl> <chr>          <dbl>
-    ## 1  1913 USA     Sebastes fasciat~ Acadian red~ 642256 MT              7.00
-    ## 2  1914 USA     Sebastes fasciat~ Acadian red~ 642246 MT             30.0 
-    ## 3  1915 USA     Sebastes fasciat~ Acadian red~ 642221 MT             40.0 
-    ## 4  1916 USA     Sebastes fasciat~ Acadian red~ 642194 MT             53.0 
-    ## 5  1917 USA     Sebastes fasciat~ Acadian red~ 642167 MT             82.0 
-    ## 6  1918 USA     Sebastes fasciat~ Acadian red~ 642156 MT             73.0 
-    ## # ... with 1 more variable: Total_Catch_units <chr>
+    ##    year country     scientificname      commonname    SSB SSBunits
+    ##   <dbl>   <chr>              <chr>           <chr>  <dbl>    <chr>
+    ## 1  1913     USA Sebastes fasciatus Acadian redfish 642256       MT
+    ## 2  1914     USA Sebastes fasciatus Acadian redfish 642246       MT
+    ## 3  1915     USA Sebastes fasciatus Acadian redfish 642221       MT
+    ## 4  1916     USA Sebastes fasciatus Acadian redfish 642194       MT
+    ## 5  1917     USA Sebastes fasciatus Acadian redfish 642167       MT
+    ## 6  1918     USA Sebastes fasciatus Acadian redfish 642156       MT
+    ## # ... with 2 more variables: Total_Catch <dbl>, Total_Catch_units <chr>
 
 Task 2: Mapping the Area table to marine regions
 ------------------------------------------------
@@ -422,17 +464,23 @@ Write code to pull all marine areas (listed in `ram$area`) that contain a certai
 ``` r
 GeorgesBank <- ram$area %>%
   filter(areaname == "Georges Bank")
+```
+
+    ## Warning: package 'bindrcpp' was built under R version 3.4.2
+
+``` r
 GeorgesBank
 ```
 
     ## # A tibble: 5 x 6
-    ##   country       areatype areacode areaname     alternateareaname areaid   
-    ##   <chr>         <chr>    <chr>    <chr>        <chr>             <chr>    
-    ## 1 Canada        DFO      5Z       Georges Bank NA                Canada-D~
-    ## 2 Canada        DFO      5Zejm    Georges Bank NA                Canada-D~
-    ## 3 Canada        DFO      5Zjm     Georges Bank NA                Canada-D~
-    ## 4 multinational TRAC     5Z       Georges Bank NA                multinat~
-    ## 5 USA           NMFS     5Z       Georges Bank NA                USA-NMFS~
+    ##         country areatype areacode     areaname alternateareaname
+    ##           <chr>    <chr>    <chr>        <chr>             <chr>
+    ## 1        Canada      DFO       5Z Georges Bank                NA
+    ## 2        Canada      DFO    5Zejm Georges Bank                NA
+    ## 3        Canada      DFO     5Zjm Georges Bank                NA
+    ## 4 multinational     TRAC       5Z Georges Bank                NA
+    ## 5           USA     NMFS       5Z Georges Bank                NA
+    ## # ... with 1 more variables: areaid <chr>
 
 We are interested in mapping the data from just the areas where Atlantic Cod are found. Using the table you built above, pull out distinct areas that contain Atlantic Cod populations into a new tidytable. Hint: you may want to use functions like `filter()` or `distinct()`
 
@@ -443,19 +491,19 @@ cod
 ```
 
     ## # A tibble: 1,069 x 8
-    ##     year country scientificname commonname     SSB SSBunits Total_Catch
-    ##    <dbl> <chr>   <chr>          <chr>        <dbl> <chr>          <dbl>
-    ##  1  1850 Canada  Gadus morhua   Atlantic cod    NA MT            133100
-    ##  2  1851 Canada  Gadus morhua   Atlantic cod    NA MT            125400
-    ##  3  1852 Canada  Gadus morhua   Atlantic cod    NA MT            120000
-    ##  4  1853 Canada  Gadus morhua   Atlantic cod    NA MT            116600
-    ##  5  1854 Canada  Gadus morhua   Atlantic cod    NA MT            103900
-    ##  6  1855 Canada  Gadus morhua   Atlantic cod    NA MT            131500
-    ##  7  1856 Canada  Gadus morhua   Atlantic cod    NA MT            150800
-    ##  8  1857 Canada  Gadus morhua   Atlantic cod    NA MT            169300
-    ##  9  1858 Canada  Gadus morhua   Atlantic cod    NA MT            133800
-    ## 10  1859 Canada  Gadus morhua   Atlantic cod    NA MT            153900
-    ## # ... with 1,059 more rows, and 1 more variable: Total_Catch_units <chr>
+    ##     year country scientificname   commonname   SSB SSBunits Total_Catch
+    ##    <dbl>   <chr>          <chr>        <chr> <dbl>    <chr>       <dbl>
+    ##  1  1850  Canada   Gadus morhua Atlantic cod    NA       MT      133100
+    ##  2  1851  Canada   Gadus morhua Atlantic cod    NA       MT      125400
+    ##  3  1852  Canada   Gadus morhua Atlantic cod    NA       MT      120000
+    ##  4  1853  Canada   Gadus morhua Atlantic cod    NA       MT      116600
+    ##  5  1854  Canada   Gadus morhua Atlantic cod    NA       MT      103900
+    ##  6  1855  Canada   Gadus morhua Atlantic cod    NA       MT      131500
+    ##  7  1856  Canada   Gadus morhua Atlantic cod    NA       MT      150800
+    ##  8  1857  Canada   Gadus morhua Atlantic cod    NA       MT      169300
+    ##  9  1858  Canada   Gadus morhua Atlantic cod    NA       MT      133800
+    ## 10  1859  Canada   Gadus morhua Atlantic cod    NA       MT      153900
+    ## # ... with 1,059 more rows, and 1 more variables: Total_Catch_units <chr>
 
 ``` r
 # we don't have area id because we took that out of ourdata table. 
@@ -474,20 +522,20 @@ cod_only
 ```
 
     ## # A tibble: 1,069 x 9
-    ##     year country areaid          scientificname commonname    SSB SSBunits
-    ##    <dbl> <chr>   <chr>           <chr>          <chr>       <dbl> <chr>   
-    ##  1  1850 Canada  Canada-DFO-2J3~ Gadus morhua   Atlantic c~    NA MT      
-    ##  2  1851 Canada  Canada-DFO-2J3~ Gadus morhua   Atlantic c~    NA MT      
-    ##  3  1852 Canada  Canada-DFO-2J3~ Gadus morhua   Atlantic c~    NA MT      
-    ##  4  1853 Canada  Canada-DFO-2J3~ Gadus morhua   Atlantic c~    NA MT      
-    ##  5  1854 Canada  Canada-DFO-2J3~ Gadus morhua   Atlantic c~    NA MT      
-    ##  6  1855 Canada  Canada-DFO-2J3~ Gadus morhua   Atlantic c~    NA MT      
-    ##  7  1856 Canada  Canada-DFO-2J3~ Gadus morhua   Atlantic c~    NA MT      
-    ##  8  1857 Canada  Canada-DFO-2J3~ Gadus morhua   Atlantic c~    NA MT      
-    ##  9  1858 Canada  Canada-DFO-2J3~ Gadus morhua   Atlantic c~    NA MT      
-    ## 10  1859 Canada  Canada-DFO-2J3~ Gadus morhua   Atlantic c~    NA MT      
-    ## # ... with 1,059 more rows, and 2 more variables: Total_Catch <dbl>,
-    ## #   Total_Catch_units <chr>
+    ##     year country           areaid scientificname   commonname   SSB
+    ##    <dbl>   <chr>            <chr>          <chr>        <chr> <dbl>
+    ##  1  1850  Canada Canada-DFO-2J3KL   Gadus morhua Atlantic cod    NA
+    ##  2  1851  Canada Canada-DFO-2J3KL   Gadus morhua Atlantic cod    NA
+    ##  3  1852  Canada Canada-DFO-2J3KL   Gadus morhua Atlantic cod    NA
+    ##  4  1853  Canada Canada-DFO-2J3KL   Gadus morhua Atlantic cod    NA
+    ##  5  1854  Canada Canada-DFO-2J3KL   Gadus morhua Atlantic cod    NA
+    ##  6  1855  Canada Canada-DFO-2J3KL   Gadus morhua Atlantic cod    NA
+    ##  7  1856  Canada Canada-DFO-2J3KL   Gadus morhua Atlantic cod    NA
+    ##  8  1857  Canada Canada-DFO-2J3KL   Gadus morhua Atlantic cod    NA
+    ##  9  1858  Canada Canada-DFO-2J3KL   Gadus morhua Atlantic cod    NA
+    ## 10  1859  Canada Canada-DFO-2J3KL   Gadus morhua Atlantic cod    NA
+    ## # ... with 1,059 more rows, and 3 more variables: SSBunits <chr>,
+    ## #   Total_Catch <dbl>, Total_Catch_units <chr>
 
 Task 3: Subsetting our data by regional id
 ------------------------------------------
@@ -505,27 +553,28 @@ cod_only %>%
 ```
 
     ## # A tibble: 19 x 7
-    ##    country.x  areaid country.y areatype areacode areaname alternateareana~
-    ##    <chr>      <chr>  <chr>     <chr>    <chr>    <chr>    <chr>           
-    ##  1 Canada     Canad~ Canada    DFO      2J3KL    Souther~ NA              
-    ##  2 multinati~ multi~ multinat~ NAFO     3M       Flemish~ NA              
-    ##  3 multinati~ multi~ multinat~ NAFO     3NO      Souther~ NA              
-    ##  4 Canada     Canad~ Canada    DFO      3Pn4RS   Norther~ NA              
-    ##  5 Canada     Canad~ Canada    DFO      3Ps      St. Pie~ NA              
-    ##  6 Canada     Canad~ Canada    DFO      4T       Souther~ NA              
-    ##  7 Canada     Canad~ Canada    DFO      4VsW     Eastern~ NA              
-    ##  8 Canada     Canad~ Canada    DFO      4X       Western~ NA              
-    ##  9 multinati~ multi~ multinat~ ICES     22-24    Western~ NA              
-    ## 10 multinati~ multi~ multinat~ ICES     25-32    Eastern~ NA              
-    ## 11 multinati~ multi~ multinat~ ICES     Vb1      Faroe P~ NA              
-    ## 12 USA        USA-N~ USA       NMFS     5Z       Georges~ NA              
-    ## 13 USA        USA-N~ USA       NMFS     5Y       Gulf of~ NA              
-    ## 14 multinati~ multi~ multinat~ ICES     Va       Iceland~ NA              
-    ## 15 multinati~ multi~ multinat~ ICES     VIIa     Irish S~ NA              
-    ## 16 multinati~ multi~ multinat~ ICES     IIIa     Kattega~ Skagerrak       
-    ## 17 multinati~ multi~ multinat~ ICES     I-II     North-E~ NA              
-    ## 18 multinati~ multi~ multinat~ ICES     IV       North S~ NA              
-    ## 19 multinati~ multi~ multinat~ ICES     VIa      West of~ Clyde herring
+    ##        country.x                   areaid     country.y areatype areacode
+    ##            <chr>                    <chr>         <chr>    <chr>    <chr>
+    ##  1        Canada         Canada-DFO-2J3KL        Canada      DFO    2J3KL
+    ##  2 multinational    multinational-NAFO-3M multinational     NAFO       3M
+    ##  3 multinational   multinational-NAFO-3NO multinational     NAFO      3NO
+    ##  4        Canada        Canada-DFO-3Pn4RS        Canada      DFO   3Pn4RS
+    ##  5        Canada           Canada-DFO-3Ps        Canada      DFO      3Ps
+    ##  6        Canada            Canada-DFO-4T        Canada      DFO       4T
+    ##  7        Canada          Canada-DFO-4VsW        Canada      DFO     4VsW
+    ##  8        Canada            Canada-DFO-4X        Canada      DFO       4X
+    ##  9 multinational multinational-ICES-22-24 multinational     ICES    22-24
+    ## 10 multinational multinational-ICES-25-32 multinational     ICES    25-32
+    ## 11 multinational   multinational-ICES-Vb1 multinational     ICES      Vb1
+    ## 12           USA              USA-NMFS-5Z           USA     NMFS       5Z
+    ## 13           USA              USA-NMFS-5Y           USA     NMFS       5Y
+    ## 14 multinational    multinational-ICES-Va multinational     ICES       Va
+    ## 15 multinational  multinational-ICES-VIIa multinational     ICES     VIIa
+    ## 16 multinational  multinational-ICES-IIIa multinational     ICES     IIIa
+    ## 17 multinational  multinational-ICES-I-II multinational     ICES     I-II
+    ## 18 multinational    multinational-ICES-IV multinational     ICES       IV
+    ## 19 multinational   multinational-ICES-VIa multinational     ICES      VIa
+    ## # ... with 2 more variables: areaname <chr>, alternateareaname <chr>
 
 ``` r
 # This told us that first 8 ids referred to DFO which is Canada and NAFO
@@ -680,14 +729,14 @@ head(stockid_fullyearrange) # character vector looks correct
 ```
 
     ## # A tibble: 6 x 1
-    ##   stockid       
-    ##   <chr>         
-    ## 1 ACADREDGOMGB  
-    ## 2 ALBAIO        
-    ## 3 ALBANATL      
+    ##          stockid
+    ##            <chr>
+    ## 1   ACADREDGOMGB
+    ## 2         ALBAIO
+    ## 3       ALBANATL
     ## 4 ARFLOUNDPCOAST
-    ## 5 ATBTUNAEATL   
-    ## 6 ATBTUNAWATL
+    ## 5    ATBTUNAEATL
+    ## 6    ATBTUNAWATL
 
 **Question 2:** How many taxa have data for the full range?
 
@@ -751,14 +800,14 @@ head(test_for_collapsed)
 
     ## # A tibble: 6 x 7
     ## # Groups:   stockid [1]
-    ##   stockid       year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
-    ##   <chr>        <dbl>       <dbl>  <dbl>         <dbl> <lgl>          <int>
-    ## 1 ACADREDGOMGB  1950       34307  34307         1.00  F                  0
-    ## 2 ACADREDGOMGB  1951       30077  34307         0.877 F                  0
-    ## 3 ACADREDGOMGB  1952       21377  34307         0.623 F                  0
-    ## 4 ACADREDGOMGB  1953       16791  34307         0.489 F                  0
-    ## 5 ACADREDGOMGB  1954       12988  34307         0.379 F                  0
-    ## 6 ACADREDGOMGB  1955       13914  34307         0.406 F                  0
+    ##        stockid  year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
+    ##          <chr> <dbl>       <dbl>  <dbl>         <dbl>     <lgl>      <int>
+    ## 1 ACADREDGOMGB  1950       34307  34307     1.0000000     FALSE          0
+    ## 2 ACADREDGOMGB  1951       30077  34307     0.8767015     FALSE          0
+    ## 3 ACADREDGOMGB  1952       21377  34307     0.6231090     FALSE          0
+    ## 4 ACADREDGOMGB  1953       16791  34307     0.4894336     FALSE          0
+    ## 5 ACADREDGOMGB  1954       12988  34307     0.3785816     FALSE          0
+    ## 6 ACADREDGOMGB  1955       13914  34307     0.4055732     FALSE          0
 
 ``` r
 tail(test_for_collapsed)
@@ -766,14 +815,15 @@ tail(test_for_collapsed)
 
     ## # A tibble: 6 x 7
     ## # Groups:   stockid [1]
-    ##   stockid       year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
-    ##   <chr>        <dbl>       <dbl>  <dbl>         <dbl> <lgl>          <int>
-    ## 1 YTSNAPSATLC~  2001          NA     NA            NA NA                NA
-    ## 2 YTSNAPSATLC~  2002          NA     NA            NA NA                NA
-    ## 3 YTSNAPSATLC~  2003          NA     NA            NA NA                NA
-    ## 4 YTSNAPSATLC~  2004          NA     NA            NA NA                NA
-    ## 5 YTSNAPSATLC~  2005          NA     NA            NA NA                NA
-    ## 6 YTSNAPSATLC~  2006          NA     NA            NA NA                NA
+    ##         stockid  year Total_Catch PeakTC PercentOfPeak Collapsed
+    ##           <chr> <dbl>       <dbl>  <dbl>         <dbl>     <lgl>
+    ## 1 YTSNAPSATLCGM  2001          NA     NA            NA        NA
+    ## 2 YTSNAPSATLCGM  2002          NA     NA            NA        NA
+    ## 3 YTSNAPSATLCGM  2003          NA     NA            NA        NA
+    ## 4 YTSNAPSATLCGM  2004          NA     NA            NA        NA
+    ## 5 YTSNAPSATLCGM  2005          NA     NA            NA        NA
+    ## 6 YTSNAPSATLCGM  2006          NA     NA            NA        NA
+    ## # ... with 1 more variables: Cumulative <int>
 
 \*\*\*Note: what the above table building revealed is that we haven't filtered all missing values out yet. Some of the taxa which we assumed had complete data based on having an entry for every year between 1950-2006 are actually missing stock or total catch data.
 
