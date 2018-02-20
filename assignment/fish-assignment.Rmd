@@ -379,16 +379,25 @@ test_for_collapsed <- complete_catch_data %>%
 
 
 
-Additional idea aboutthe TC collapse - there's probably a way we can set up the conditional so only the values of TC that are below 10% and come *after* the peak TC value (eg based on comparing the year of TC > peak of PeakTC) are counted as collapsed
-
-
 ## Task 4: Plotting total catch
 
 Using `geom_area()` plot the TC per stockid across all years. 
 ```{r}
+TCplot <- ggplot(test_for_collapsed, aes(x=year, y=Total_Catch, fill=stockid)) + 
+    geom_area(colour="black", size=.2, alpha=.4) + 
+    ylab("Total catch per stockid")+
+    xlab("Year")+
+    theme_bw() +
+    theme(text=element_text(size=16)) +
+    theme(legend.position="bottom")
 
-
+TCplot
 ```
+
+
+
+Additional idea aboutthe TC collapse - there's probably a way we can set up the conditional so only the values of TC that are below 10% and come *after* the peak TC value (eg based on comparing the year of TC > peak of PeakTC) are counted as collapsed
+
 
 ## Task 5: Calculating percent collapsed
 
@@ -398,7 +407,7 @@ Using the `summarise()` function, and only the core stocks that have data
 across the full interval, build a new tidy table
 that gives the fraction of all stocks that are collapsed in each year and 
 include a cumulative column that gives the fraction of all years (between 1950 and each year)
-that has experience at least one collapse. 
+that has experienced at least one collapse. 
 
 Hint: when logical vectors are summed or converted to numerics, TRUE = 1 and FALSE = 0.
 

@@ -485,32 +485,7 @@ GeorgesBank
 We are interested in mapping the data from just the areas where Atlantic Cod are found. Using the table you built above, pull out distinct areas that contain Atlantic Cod populations into a new tidytable. Hint: you may want to use functions like `filter()` or `distinct()`
 
 ``` r
-<<<<<<< HEAD
-cod <- ourdata %>%
-  filter(commonname == "Atlantic cod")
-cod
-```
-
-    ## # A tibble: 1,069 x 8
-    ##     year country scientificname   commonname   SSB SSBunits Total_Catch
-    ##    <dbl>   <chr>          <chr>        <chr> <dbl>    <chr>       <dbl>
-    ##  1  1850  Canada   Gadus morhua Atlantic cod    NA       MT      133100
-    ##  2  1851  Canada   Gadus morhua Atlantic cod    NA       MT      125400
-    ##  3  1852  Canada   Gadus morhua Atlantic cod    NA       MT      120000
-    ##  4  1853  Canada   Gadus morhua Atlantic cod    NA       MT      116600
-    ##  5  1854  Canada   Gadus morhua Atlantic cod    NA       MT      103900
-    ##  6  1855  Canada   Gadus morhua Atlantic cod    NA       MT      131500
-    ##  7  1856  Canada   Gadus morhua Atlantic cod    NA       MT      150800
-    ##  8  1857  Canada   Gadus morhua Atlantic cod    NA       MT      169300
-    ##  9  1858  Canada   Gadus morhua Atlantic cod    NA       MT      133800
-    ## 10  1859  Canada   Gadus morhua Atlantic cod    NA       MT      153900
-    ## # ... with 1,059 more rows, and 1 more variables: Total_Catch_units <chr>
-
-``` r
-# we don't have area id because we took that out of ourdata table. 
-=======
 # we don't have area id because we took that out of ourdata table above. 
->>>>>>> 4ade5b4bd0b322179485a6d95b3c5e65595b49a4
 # we're building another table!
 
 ourdata_withareaid <- left_join(ram$timeseries_values_views, ram$timeseries_units_views, 
@@ -867,14 +842,14 @@ head(test1)
 
     ## # A tibble: 6 x 7
     ## # Groups:   stockid [1]
-    ##   stockid       year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
-    ##   <chr>        <dbl>       <dbl>  <dbl>         <dbl> <lgl>          <int>
-    ## 1 ACADREDGOMGB  1950       34307  34307         1.00  F                  0
-    ## 2 ACADREDGOMGB  1951       30077  34307         0.877 F                  0
-    ## 3 ACADREDGOMGB  1952       21377  34307         0.623 F                  0
-    ## 4 ACADREDGOMGB  1953       16791  34307         0.489 F                  0
-    ## 5 ACADREDGOMGB  1954       12988  34307         0.379 F                  0
-    ## 6 ACADREDGOMGB  1955       13914  34307         0.406 F                  0
+    ##        stockid  year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
+    ##          <chr> <dbl>       <dbl>  <dbl>         <dbl>     <lgl>      <int>
+    ## 1 ACADREDGOMGB  1950       34307  34307     1.0000000     FALSE          0
+    ## 2 ACADREDGOMGB  1951       30077  34307     0.8767015     FALSE          0
+    ## 3 ACADREDGOMGB  1952       21377  34307     0.6231090     FALSE          0
+    ## 4 ACADREDGOMGB  1953       16791  34307     0.4894336     FALSE          0
+    ## 5 ACADREDGOMGB  1954       12988  34307     0.3785816     FALSE          0
+    ## 6 ACADREDGOMGB  1955       13914  34307     0.4055732     FALSE          0
 
 ``` r
 tail(test1)
@@ -882,14 +857,14 @@ tail(test1)
 
     ## # A tibble: 6 x 7
     ## # Groups:   stockid [1]
-    ##   stockid    year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
-    ##   <chr>     <dbl>       <dbl>  <dbl>         <dbl> <lgl>          <int>
-    ## 1 YSOLEBSAI  2001       63395 227107         0.279 F                  0
-    ## 2 YSOLEBSAI  2002       73000 227107         0.321 F                  0
-    ## 3 YSOLEBSAI  2003       74418 227107         0.328 F                  0
-    ## 4 YSOLEBSAI  2004       69046 227107         0.304 F                  0
-    ## 5 YSOLEBSAI  2005       94383 227107         0.416 F                  0
-    ## 6 YSOLEBSAI  2006       99068 227107         0.436 F                  0
+    ##     stockid  year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
+    ##       <chr> <dbl>       <dbl>  <dbl>         <dbl>     <lgl>      <int>
+    ## 1 YSOLEBSAI  2001       63395 227107     0.2791416     FALSE          0
+    ## 2 YSOLEBSAI  2002       73000 227107     0.3214344     FALSE          0
+    ## 3 YSOLEBSAI  2003       74418 227107     0.3276781     FALSE          0
+    ## 4 YSOLEBSAI  2004       69046 227107     0.3040241     FALSE          0
+    ## 5 YSOLEBSAI  2005       94383 227107     0.4155882     FALSE          0
+    ## 6 YSOLEBSAI  2006       99068 227107     0.4362173     FALSE          0
 
 ``` r
 test1 %>% 
@@ -899,17 +874,17 @@ test1 %>%
 
     ## # A tibble: 51 x 1
     ## # Groups:   stockid [51]
-    ##    stockid         
-    ##    <chr>           
-    ##  1 ACADREDGOMGB    
-    ##  2 ALBAIO          
-    ##  3 ALBANATL        
-    ##  4 ARFLOUNDPCOAST  
-    ##  5 ATBTUNAEATL     
-    ##  6 ATBTUNAWATL     
-    ##  7 BGROCKPCOAST    
-    ##  8 BIGEYEIO        
-    ##  9 BKCDLFENI       
+    ##             stockid
+    ##               <chr>
+    ##  1     ACADREDGOMGB
+    ##  2           ALBAIO
+    ##  3         ALBANATL
+    ##  4   ARFLOUNDPCOAST
+    ##  5      ATBTUNAEATL
+    ##  6      ATBTUNAWATL
+    ##  7     BGROCKPCOAST
+    ##  8         BIGEYEIO
+    ##  9        BKCDLFENI
     ## 10 BLACKROCKNPCOAST
     ## # ... with 41 more rows
 
@@ -950,14 +925,14 @@ head(test2)
 
     ## # A tibble: 6 x 7
     ## # Groups:   stockid [1]
-    ##   stockid       year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
-    ##   <chr>        <dbl>       <dbl>  <dbl>         <dbl> <lgl>          <int>
-    ## 1 ACADREDGOMGB  1950       34307  34307         1.00  F                  0
-    ## 2 ACADREDGOMGB  1951       30077  34307         0.877 F                  0
-    ## 3 ACADREDGOMGB  1952       21377  34307         0.623 F                  0
-    ## 4 ACADREDGOMGB  1953       16791  34307         0.489 F                  0
-    ## 5 ACADREDGOMGB  1954       12988  34307         0.379 F                  0
-    ## 6 ACADREDGOMGB  1955       13914  34307         0.406 F                  0
+    ##        stockid  year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
+    ##          <chr> <dbl>       <dbl>  <dbl>         <dbl>     <lgl>      <int>
+    ## 1 ACADREDGOMGB  1950       34307  34307     1.0000000     FALSE          0
+    ## 2 ACADREDGOMGB  1951       30077  34307     0.8767015     FALSE          0
+    ## 3 ACADREDGOMGB  1952       21377  34307     0.6231090     FALSE          0
+    ## 4 ACADREDGOMGB  1953       16791  34307     0.4894336     FALSE          0
+    ## 5 ACADREDGOMGB  1954       12988  34307     0.3785816     FALSE          0
+    ## 6 ACADREDGOMGB  1955       13914  34307     0.4055732     FALSE          0
 
 ``` r
 tail(test2)
@@ -965,14 +940,14 @@ tail(test2)
 
     ## # A tibble: 6 x 7
     ## # Groups:   stockid [1]
-    ##   stockid    year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
-    ##   <chr>     <dbl>       <dbl>  <dbl>         <dbl> <lgl>          <int>
-    ## 1 YSOLEBSAI  2001       63395 227107         0.279 F                  0
-    ## 2 YSOLEBSAI  2002       73000 227107         0.321 F                  0
-    ## 3 YSOLEBSAI  2003       74418 227107         0.328 F                  0
-    ## 4 YSOLEBSAI  2004       69046 227107         0.304 F                  0
-    ## 5 YSOLEBSAI  2005       94383 227107         0.416 F                  0
-    ## 6 YSOLEBSAI  2006       99068 227107         0.436 F                  0
+    ##     stockid  year Total_Catch PeakTC PercentOfPeak Collapsed Cumulative
+    ##       <chr> <dbl>       <dbl>  <dbl>         <dbl>     <lgl>      <int>
+    ## 1 YSOLEBSAI  2001       63395 227107     0.2791416     FALSE          0
+    ## 2 YSOLEBSAI  2002       73000 227107     0.3214344     FALSE          0
+    ## 3 YSOLEBSAI  2003       74418 227107     0.3276781     FALSE          0
+    ## 4 YSOLEBSAI  2004       69046 227107     0.3040241     FALSE          0
+    ## 5 YSOLEBSAI  2005       94383 227107     0.4155882     FALSE          0
+    ## 6 YSOLEBSAI  2006       99068 227107     0.4362173     FALSE          0
 
 ``` r
 test2 %>% 
@@ -982,17 +957,17 @@ test2 %>%
 
     ## # A tibble: 51 x 1
     ## # Groups:   stockid [51]
-    ##    stockid         
-    ##    <chr>           
-    ##  1 ACADREDGOMGB    
-    ##  2 ALBAIO          
-    ##  3 ALBANATL        
-    ##  4 ARFLOUNDPCOAST  
-    ##  5 ATBTUNAEATL     
-    ##  6 ATBTUNAWATL     
-    ##  7 BGROCKPCOAST    
-    ##  8 BIGEYEIO        
-    ##  9 BKCDLFENI       
+    ##             stockid
+    ##               <chr>
+    ##  1     ACADREDGOMGB
+    ##  2           ALBAIO
+    ##  3         ALBANATL
+    ##  4   ARFLOUNDPCOAST
+    ##  5      ATBTUNAEATL
+    ##  6      ATBTUNAWATL
+    ##  7     BGROCKPCOAST
+    ##  8         BIGEYEIO
+    ##  9        BKCDLFENI
     ## 10 BLACKROCKNPCOAST
     ## # ... with 41 more rows
 
@@ -1009,17 +984,31 @@ test_for_collapsed <- complete_catch_data %>%
           select(stockid, year, Total_Catch, PeakTC, PercentOfPeak, Collapsed, Cumulative)
 ```
 
-Additional idea aboutthe TC collapse - there's probably a way we can set up the conditional so only the values of TC that are below 10% and come *after* the peak TC value (eg based on comparing the year of TC &gt; peak of PeakTC) are counted as collapsed
-
 Task 4: Plotting total catch
 ----------------------------
 
 Using `geom_area()` plot the TC per stockid across all years.
 
+``` r
+TCplot <- ggplot(test_for_collapsed, aes(x=year, y=Total_Catch, fill=stockid)) + 
+    geom_area(colour="black", size=.2, alpha=.4) + 
+    ylab("Total catch per stockid")+
+    xlab("Year")+
+    theme_bw() +
+    theme(text=element_text(size=16)) +
+    theme(legend.position="bottom")
+
+TCplot
+```
+
+![](fish-assignment_files/figure-markdown_github/unnamed-chunk-15-1.png)
+
+Additional idea aboutthe TC collapse - there's probably a way we can set up the conditional so only the values of TC that are below 10% and come *after* the peak TC value (eg based on comparing the year of TC &gt; peak of PeakTC) are counted as collapsed
+
 Task 5: Calculating percent collapsed
 -------------------------------------
 
-To replicate the original plot, we must calculate the percent of taxa collapsed over time. Using the `summarise()` function, and only the core stocks that have data across the full interval, build a new tidy table that gives the fraction of all stocks that are collapsed in each year and include a cumulative column that gives the fraction of all years (between 1950 and each year) that has experience at least one collapse.
+To replicate the original plot, we must calculate the percent of taxa collapsed over time. Using the `summarise()` function, and only the core stocks that have data across the full interval, build a new tidy table that gives the fraction of all stocks that are collapsed in each year and include a cumulative column that gives the fraction of all years (between 1950 and each year) that has experienced at least one collapse.
 
 Hint: when logical vectors are summed or converted to numerics, TRUE = 1 and FALSE = 0.
 
