@@ -406,5 +406,16 @@ TCplot
 
 Notes for futher work: 
 - There's probably a way we can set up the conditional so only the values of TotalCatc that are below 10% and come *after* the peak TC value (eg based on comparing the year of TC > peak of PeakTC) are counted as collapsed
-```
 
+Notes from class discussion + code review: 
+- Inside function, must use square brackets instead of $
+- tsn is unique identify for scientific name
+- It can be confusing to put rename inside left_join (can break out with pipe) 
+- filter() vs grepl()
+  - == "Georges Bank" makes TRUE/FALSE vector, only finds exact matches, and not eg "Georges Bank /Gulf of Maine"
+  - l in grepl stands for logical
+- unique() works on elements of a vector, distinct() can oull unique *rows*
+- filter by multiple spellings:
+  - commonname %in% c("Atlantic cod", "Atlantic Cod")
+- GSI's way of plotting total taxa: filter %>% na.omit %>% group_by %>% tally 
+- Could mutate  anew column to be the year of max catch, and then for stocks with less than 10% of TC before that year, collapse is FALSE, but true for years after the peak TC year
